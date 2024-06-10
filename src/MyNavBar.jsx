@@ -17,7 +17,7 @@ function MyNavbar() {
           </Nav>
         </Navbar.Collapse>
     </Container>
-    {/* <Logout /> */}
+    <Logout />
     </Navbar>
   );
 }

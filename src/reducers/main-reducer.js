@@ -53,7 +53,7 @@ export const mainReducer = (state, action) => {
         accessToken: '',
         profile: {},
         friendGroups: [],
-        users:[]
+        users:[],
       };
     default:
       return state;

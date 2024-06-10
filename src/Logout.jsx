@@ -1,22 +1,25 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useReducer, useState } from "react"
 import { AuthContext } from "./context"
 import { useNavigate } from "react-router-dom"
+import { mainReducer } from "./reducers/main-reducer"
+
 
 function Logout() {
-    const { auth } = useContext(AuthContext)
+    const { state, dispatch } = useContext(AuthContext);
     const navigate = useNavigate()
 
     useEffect(()=> {
-        if (auth.accessToken == undefined){
-          navigate('/login/')
+        if (state.accessToken == undefined){
+            navigate('/login/')
         }
-      },[navigate, auth.accessToken])
+      },[navigate, state.accessToken])
 
 
-    const logoutUser = (token) => {
-        auth.setAccessToken("")
-        localStorage.removeItem("token")
-        console.log('token should be clear', token)
+    const logoutUser = () => {
+        dispatch({
+            type: 'LOGOUT'
+            })
+        console.log(' should be clear')
         
     }
 
