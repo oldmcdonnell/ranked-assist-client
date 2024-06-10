@@ -3,22 +3,21 @@ import { AuthContext } from './context';
 import { listUsers } from './api';
 
 function UserList() {
-  const { auth } = useContext(AuthContext);
-  const [users, setUsers] = useState([]);
+  const { state, dispatch } = useContext(AuthContext);
+  const { accessToken, users } = state;
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await listUsers({ auth });
-        setUsers(response.data);
+        await listUsers({ accessToken, dispatch });
       } catch (error) {
         setError(error.response ? error.response.data : error.message);
       }
     };
 
     fetchUsers();
-  }, [auth]);
+  }, [accessToken, dispatch]);
 
   if (error) {
     return <div>Error: {error}</div>;

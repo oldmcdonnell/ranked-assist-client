@@ -1,81 +1,109 @@
-import axios from 'axios'
+import axios from 'axios';
 
-const baseUrl = "http://127.0.0.1:8000"
+const baseUrl = "http://127.0.0.1:8000";
 
-export const getToken = ({ auth, username, password }) => {
-  axios.post(`${baseUrl}/token/`, {
-    username: username,
-    password: password
-  }).then(response => {
-    console.log('RESPONSE: ', response)
-    auth.setAccessToken(response.data.access)
-  })
-  .catch(error => {
-    console.log('ERROR: ', error)
-    auth.setAccessToken(undefined)
-  })
-}
-
-export const fetchUser = ({ auth }) => {
-  axios({
-    method: 'get',
-    url: `${baseUrl}/profile/`, 
-    headers: {
-      Authorization: `Bearer ${auth.accessToken}`
-    }
-  }).then(response => {
-    console.log('PROFILE: ', response)
-  })
-  .catch(error => {
-    console.log('ERROR: ', error)
-    auth.setAccessToken(undefined)
-  })
-}
-
-export const createUser = ({ username, password, firstName, lastName }) => {
-  return axios({
-    method: 'post',
-    url: `${baseUrl}/create-user/`,
-    data: {
-      username,
+export const getToken = async ({ dispatch, username, password }) => {
+  try {
+    const response = await axios.post(`${baseUrl}/token/`, {
+      username: username,
       password: password,
-      first_name: firstName,
-      last_name: lastName,
-    },
-  })
-    .then(response => {
-      console.log('CREATE USER: ', response);
-      return { success: true, data: response.data };
-    })
-    .catch(error => {
-      console.log('ERROR: ', error);
-      return { success: false, error };
     });
+    console.log('Token Response: ', response);
+    const accessToken = response.data.access;
+    dispatch({
+      type: 'SET_ACCESS_TOKEN',
+      accessToken: accessToken,
+    });
+    return accessToken;
+  } catch (error) {
+    console.log('Error with getToken api call: ', error);
+    dispatch({
+      type: 'SET_ACCESS_TOKEN',
+      accessToken: undefined,
+    });
+  }
 };
 
-
-export const listUsers = ({ auth }) => {
-  console.log('get users', auth.accessToken);
-  return axios({
-    method: 'GET',
-    url: `${baseUrl}/list-users/`,
-    headers: {
-      Authorization: `Bearer ${auth.accessToken}`,
-    },
-  });
+export const fetchUser = async ({ dispatch, accessToken }) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${baseUrl}/profile/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    console.log('PROFILE: ', response);
+    dispatch({
+      type: 'SET_PROFILE',
+      profile: response.data,
+    });
+    return response.data;
+  } catch (error) {
+    console.log('Error with fetchUser api call: ', error);
+    dispatch({
+      type: 'SET_ACCESS_TOKEN',
+      accessToken: undefined,
+    });
+  }
 };
 
-export const createFriendGroup = ({ auth, username, note }) => {
-  console.log('create friend group', auth.accessToken);
-  return axios({
-    method: 'POST',
-    url: `${baseUrl}/create-friend-group/`,
-    headers: {
-      Authorization: `Bearer ${auth.accessToken}`,
-    },
-    data: {
-      owner_username: username, // Assuming the API expects the owner's username in the request data
-      note
-    },
-  });
+export const createUser = async ({ username, password, firstName, lastName }) => {
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${baseUrl}/create-user/`,
+      data: {
+        username,
+        password,
+        first_name: firstName,
+        last_name: lastName,
+      },
+    });
+    console.log('CREATE USER: ', response);
+    return { success: true, data: response.data };
+  } catch (error) {
+    console.log('ERROR: ', error);
+    return { success: false, error };
+  }
+};
+
+export const listUsers = async ({ dispatch, accessToken }) => {
+  console.log('get users', accessToken);
+  try {
+    const response = await axios({
+      method: 'GET',
+      url: `${baseUrl}/list-users/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    dispatch({ type: 'SET_USERS', users: response.data });
+    return response;
+  } catch (error) {
+    console.error('ERROR:', error);
+    throw error;
+  }
+};
+
+export const createFriendGroup = async ({ dispatch, accessToken, username, note }) => {
+  console.log('create friend group', accessToken);
+  try {
+    const response = await axios({
+      method: 'POST',
+      url: `${baseUrl}/create-friend-group/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        owner_username: username,
+        note,
+      },
+    });
+    console.log('CREATE FRIEND GROUP: ', response);
+    // Assuming you may want to update state with the new friend group, dispatch an action here
+    dispatch({ type: 'ADD_FRIEND_GROUP', friendGroup: response.data });
+  } catch (error) {
+    console.log('ERROR: ', error);
+  }
 };

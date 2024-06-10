@@ -5,9 +5,9 @@ function App() {
 
   return (
     <div className="p-5">
-      <UserList />
-      <CreateFriendGroupForm />
-      
+      {/* <UserList /> */}
+      {/* <CreateFriendGroupForm /> */}
+
     </div>
   )
 }

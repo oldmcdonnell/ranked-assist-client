@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useReducer } from 'react'
 import ReactDOM from 'react-dom/client'
 import { Navigate } from 'react-router-dom'
 import {
@@ -18,12 +18,13 @@ import Footer from './Footer'
 import Login from './Login'
 import { AuthContext } from './context'
 import CreateNewUser from './CreateNewUser'
+import { initialMainState, mainReducer } from './reducers/main-reducer';
 
 
 const Protected = ({ component }) => {
   const { auth } = useContext(AuthContext);
   console.log('protected auth state ', auth);
-  return auth?.accessToken ? (
+  return state?.accessToken ? (
     <>
       {component}
     </>
@@ -68,29 +69,19 @@ const router = createBrowserRouter([
 ])
 
 const AuthContextProvider = ({ children }) => {
-  let tempToken = JSON.parse(localStorage.getItem('token'))
-  
-  const [accessToken, setAccessToken] = useState(tempToken ? tempToken : "")
+  const [state, dispatch] = useReducer(mainReducer, initialMainState)
 
-useEffect(() => {
-  if (accessToken) {
-    localStorage.setItem("token", JSON.stringify(accessToken));
-  } else {
-    localStorage.getItem("token");
-  }
-}, [accessToken]);
-
-  const auth = {
-    accessToken,
-    setAccessToken
-  }
+  const main = {
+    state,
+    dispatch,
+  };
 
   return (
-    <AuthContext.Provider value ={{ auth }}>
+    <AuthContext.Provider value ={{ state, dispatch }}>
       {children}
     </AuthContext.Provider>
-  )
-}
+  );
+};
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <AuthContextProvider>
