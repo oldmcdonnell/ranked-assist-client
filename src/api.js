@@ -52,3 +52,30 @@ export const createUser = ({ username, password, firstName, lastName }) => {
       return { success: false, error };
     });
 };
+
+
+export const listUsers = ({ auth }) => {
+  console.log('get users', auth.accessToken);
+  return axios({
+    method: 'GET',
+    url: `${baseUrl}/list-users/`,
+    headers: {
+      Authorization: `Bearer ${auth.accessToken}`,
+    },
+  });
+};
+
+export const createFriendGroup = ({ auth, username, note }) => {
+  console.log('create friend group', auth.accessToken);
+  return axios({
+    method: 'POST',
+    url: `${baseUrl}/create-friend-group/`,
+    headers: {
+      Authorization: `Bearer ${auth.accessToken}`,
+    },
+    data: {
+      owner_username: username, // Assuming the API expects the owner's username in the request data
+      note
+    },
+  });
+};
