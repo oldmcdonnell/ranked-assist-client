@@ -1,21 +1,37 @@
-import { useState } from "react"
-import { Link } from "react-router-dom"
-import { createUser } from './api'
+import React, { useState } from "react";
+import { createUser } from "./api"; // Assuming you have an API function to create users
+import { useNavigate } from "react-router-dom";
 
+function CreateNewUser() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-const CreateNewUser = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-
-  const submit = () => {
-    createUser({ username, password, firstName, lastName })
-  }
+  const submit = async () => {
+    try {
+      const response = await createUser({ username, password, firstName, lastName });
+      if (response.success) {
+        // Clear the input fields
+        setUsername('');
+        setPassword('');
+        setFirstName('');
+        setLastName('');
+        navigate('/login'); // Redirect to login or any other page
+      } else {
+        setError(response.error || 'Failed to create user.');
+      }
+    } catch (error) {
+      setError('An error occurred.');
+    }
+  };
 
   return (
-    <div>
+    <div className="p-5">
       <h1>Create New User</h1>
+      {error && <div className="error">{error}</div>}
       <div>
         <div>Username:</div>
         <input
@@ -27,7 +43,7 @@ const CreateNewUser = () => {
       <div>
         <div>Password:</div>
         <input
-          input="password"
+          type="password"
           onChange={(e) => setPassword(e.target.value)}
           value={password}
         />
@@ -50,11 +66,10 @@ const CreateNewUser = () => {
       </div>
 
       <div style={{ marginTop: 20 }}>
-        <button onClick={() => submit()}>Submit</button>
+        <button onClick={submit}>Submit</button>
       </div>
-      <Link className="text-black-50 px-3 navBar" to="/Login">Login</Link>
     </div>
-  )
+  );
 }
 
-export default CreateNewUser
+export default CreateNewUser;

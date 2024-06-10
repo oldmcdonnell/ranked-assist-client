@@ -33,19 +33,22 @@ export const fetchUser = ({ auth }) => {
 }
 
 export const createUser = ({ username, password, firstName, lastName }) => {
-  axios({
+  return axios({
     method: 'post',
-    url: `${baseUrl}/create-user/`, 
+    url: `${baseUrl}/create-user/`,
     data: {
       username,
       password: password,
       first_name: firstName,
-      last_name: lastName
-    }
-  }).then(response => {
-    console.log('CREATE USER: ', response)
+      last_name: lastName,
+    },
   })
-  .catch(error => {
-    console.log('ERROR: ', error)
-  })
-}
+    .then(response => {
+      console.log('CREATE USER: ', response);
+      return { success: true, data: response.data };
+    })
+    .catch(error => {
+      console.log('ERROR: ', error);
+      return { success: false, error };
+    });
+};
