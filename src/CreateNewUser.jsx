@@ -51,6 +51,7 @@ const CreateNewUser = () => {
       <div style={{ marginTop: 20 }}>
         <button onClick={() => submit()}>Submit</button>
       </div>
+      <Link className="text-black-50 px-3 navBar" to="/Login">Login</Link>
     </div>
   )
 }

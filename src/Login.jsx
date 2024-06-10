@@ -1,14 +1,22 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useState, useEffect } from "react"
 
 import { AuthContext } from "./context"
 import { getToken } from "./api"
 import CreateNewUser from "./CreateNewUser"
-
+import { useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 
 function Login() {
   const { auth } = useContext(AuthContext)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const navigate = useNavigate()
+
+  useEffect(()=> {
+    if (auth.accessToken){
+      navigate('/')
+    }
+  },[navigate, auth.accessToken])
 
   const submit = () => {
     getToken({ auth, username, password })
@@ -40,7 +48,7 @@ function Login() {
 
       <hr />
 
-      <CreateNewUser />
+      <Link className="text-black-50 px-3 navBar" to="/CreateNewUser">Create New User</Link>
 
     </div>
   )
