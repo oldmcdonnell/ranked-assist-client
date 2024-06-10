@@ -27,6 +27,7 @@ const CreateNewUser = () => {
       <div>
         <div>Password:</div>
         <input
+          input="password"
           onChange={(e) => setPassword(e.target.value)}
           value={password}
         />
