@@ -24,7 +24,7 @@ import { initialMainState, mainReducer } from './reducers/main-reducer';
 const Protected = ({ component }) => {
   const { auth } = useContext(AuthContext);
   console.log('protected auth state ', auth);
-  return state?.accessToken ? (
+  return auth?.accessToken ? (
     <>
       {component}
     </>
@@ -54,7 +54,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <App />
+        element: <Protected component={<App />} />
       },
       {
         path: '/login',
