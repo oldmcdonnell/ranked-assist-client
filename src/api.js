@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const baseUrl = "http://127.0.0.1:8000";
+// const baseUrl = "http://127.0.0.1:8000";
+const baseUrl = "https://ranked-assist-server.fly.dev";
 
 export const getToken = async ({ dispatch, username, password }) => {
   try {
@@ -48,7 +49,7 @@ export const fetchUser = async ({ dispatch, accessToken }) => {
   }
 };
 
-export const createUser = async ({ username, password, firstName, lastName }) => {
+export const createUser = async ({ username, password, firstName, lastName, email }) => {
   try {
     const response = await axios({
       method: 'post',
@@ -58,6 +59,7 @@ export const createUser = async ({ username, password, firstName, lastName }) =>
         password,
         first_name: firstName,
         last_name: lastName,
+        email,
       },
     });
     console.log('CREATE USER: ', response);
@@ -86,7 +88,7 @@ export const listUsers = async ({ accessToken, dispatch }) => {
   }
 };
 
-export const createFriendGroup = async ({ dispatch, accessToken, username, note }) => {
+export const createFriendGroup = async ({ accessToken, dispatch, users, note }) => {
   console.log('create friend group', accessToken);
   try {
     const response = await axios({
@@ -96,12 +98,12 @@ export const createFriendGroup = async ({ dispatch, accessToken, username, note 
         Authorization: `Bearer ${accessToken}`,
       },
       data: {
-        owner_username: username,
+        users, // Pass the array of selected users
         note,
       },
     });
     console.log('CREATE FRIEND GROUP: ', response);
-    // Assuming you may want to update state with the new friend group, dispatch an action here
+    // Dispatch an action if needed
     dispatch({ type: 'ADD_FRIEND_GROUP', friendGroup: response.data });
   } catch (error) {
     console.log('ERROR: ', error);

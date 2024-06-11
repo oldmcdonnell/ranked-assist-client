@@ -7,6 +7,7 @@ function CreateNewUser() {
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -19,6 +20,7 @@ function CreateNewUser() {
         setPassword('');
         setFirstName('');
         setLastName('');
+        setEmail('');
         navigate('/login'); // Redirect to login or any other page
       } else {
         setError(response.error || 'Failed to create user.');
@@ -62,6 +64,14 @@ function CreateNewUser() {
         <input
           onChange={(e) => setLastName(e.target.value)}
           value={lastName}
+        />
+      </div>
+
+      <div>
+        <div>Email:</div>
+        <input
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
         />
       </div>
 

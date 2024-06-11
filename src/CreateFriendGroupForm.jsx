@@ -1,36 +1,89 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from './context';
-import { createFriendGroup } from './api';
+import { listUsers, createFriendGroup } from './api';
 
 function CreateFriendGroupForm() {
-  const { auth } = useContext(AuthContext);
-  const [groupName, setGroupName] = useState('');
-  const [note, setNote] = useState(''); // Add state for the note
+  const { state, dispatch } = useContext(AuthContext);
+  const [users, setUsers] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [note, setNote] = useState('');
   const [error, setError] = useState(null);
 
-  const handleCreateGroup = async () => {
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await listUsers({ accessToken: state.accessToken, dispatch });
+        setUsers(response.data);
+      } catch (error) {
+        setError(error.response ? error.response.data : error.message);
+      }
+    };
+
+    fetchUsers();
+  }, [state.accessToken, dispatch]);
+
+  const handleUserSelection = (userId) => {
+    setSelectedUsers((prevSelectedUsers) =>
+      prevSelectedUsers.includes(userId)
+        ? prevSelectedUsers.filter((id) => id !== userId)
+        : [...prevSelectedUsers, userId]
+    );
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const response = await createFriendGroup({ auth, username: auth.user.username, note }); // Pass the note to the createFriendGroup function
-      console.log('Friend group created:', response.data);
-      // Handle success, e.g., show a success message or redirect to another page
+      await createFriendGroup({
+        accessToken: state.accessToken,
+        dispatch,
+        users: selectedUsers,
+        note,
+      });
+      // Clear the form after successful submission
+      setSelectedUsers([]);
+      setNote('');
     } catch (error) {
       setError(error.response ? error.response.data : error.message);
     }
   };
 
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
   return (
     <div>
       <h1>Create Friend Group</h1>
-      <div>
-        <label>Group Name:</label>
-        <input type="text" value={groupName} onChange={(e) => setGroupName(e.target.value)} />
-      </div>
-      <div>
-        <label>Note:</label> {/* Add input for the note */}
-        <textarea value={note} onChange={(e) => setNote(e.target.value)} />
-      </div>
-      {error && <div>Error: {error}</div>}
-      <button onClick={handleCreateGroup}>Create Group</button>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Note:</label>
+          <input
+            type="text"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Select Users:</label>
+          <ul>
+            {users.map((user) => (
+              <li key={user.id}>
+                <label>
+                  <input
+                    type="checkbox"
+                    value={user.id}
+                    checked={selectedUsers.includes(user.id)}
+                    onChange={() => handleUserSelection(user.id)}
+                  />
+                  {user.username}
+                </label>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <button type="submit">Create Group</button>
+      </form>
     </div>
   );
 }
