@@ -68,8 +68,8 @@ export const createUser = async ({ username, password, firstName, lastName }) =>
   }
 };
 
-export const listUsers = async ({ dispatch, accessToken }) => {
-  console.log('get users', accessToken);
+export const listUsers = async ({ accessToken, dispatch }) => {
+  console.log('Auth: ', accessToken)
   try {
     const response = await axios({
       method: 'GET',
