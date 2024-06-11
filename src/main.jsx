@@ -22,9 +22,9 @@ import { initialMainState, mainReducer } from './reducers/main-reducer';
 
 
 const Protected = ({ component }) => {
-  const { auth } = useContext(AuthContext);
-  console.log('protected auth state ', auth);
-  return auth?.accessToken ? (
+  const { state } = useContext(AuthContext);
+  console.log('protected auth state ', state);
+  return state?.accessToken ? (
     <>
       {component}
     </>
