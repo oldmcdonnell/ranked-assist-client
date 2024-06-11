@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const baseUrl = "http://127.0.0.1:8000";
-const baseUrl = "https://ranked-assist-server.fly.dev";
+const baseUrl = "http://127.0.0.1:8000";
+// const baseUrl = "https://ranked-assist-server.fly.dev";
 
 export const getToken = async ({ dispatch, username, password }) => {
   try {
@@ -109,3 +109,21 @@ export const createFriendGroup = async ({ accessToken, dispatch, users, note }) 
     console.log('ERROR: ', error);
   }
 };
+
+
+
+/*-
+
+we need a send email function 
+export const sendResults = async ({ accessToken, dispatch, friendGroup}) => {
+  const response await axios({
+    try{
+
+    } catch (error){
+      console.log('ERROR), error
+    }
+
+  })
+}
+
+-*/
