@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from './context';
 import { listUsers, createFriendGroup } from './api';
+import { ProfileContext } from './context';
 
 function CreateFriendGroupForm() {
   const { state, dispatch } = useContext(AuthContext);

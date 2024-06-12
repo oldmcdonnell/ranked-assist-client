@@ -6,6 +6,7 @@ export const initialMainState = JSONStorage ?? {
   friendGroups: [], // Initialize friendGroups as an empty array
   users: [],
   profileImSeeing: [],
+  groups: [],
 };
 
 export const mainReducer = (state, action) => {
@@ -47,6 +48,15 @@ export const mainReducer = (state, action) => {
           ...state,
           users: action.users,
         };
+    case 'SET_GROUPS':
+        localStorage.setItem(
+            'STATE',
+        JSON.stringify({ ...state, groups: action.groups })
+        );
+        return {
+            ...state,
+        groups: action.groups,
+    };
     case 'LOGOUT':
       localStorage.removeItem('STATE');
       return {
@@ -54,6 +64,7 @@ export const mainReducer = (state, action) => {
         profile: {},
         friendGroups: [],
         users:[],
+        groups: []
       };
     default:
       return state;

@@ -99,7 +99,7 @@ export const createFriendGroup = async ({ accessToken, dispatch, users, note }) 
         Authorization: `Bearer ${accessToken}`,
       },
       data: {
-        users, // Pass the array of selected users
+        users,
         note,
       },
     });
@@ -172,3 +172,54 @@ export const createCandidate = async ({ voteId, profileId, description, accessTo
   });
   return response.data;
 };
+
+
+export const getAllProfiles = async (dispatch, accessToken) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${baseUrl}/get-profiles/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    console.log('PROFILES: ', response);
+    dispatch({
+      type: 'SET_USERS',
+      profile: response.data,
+    });
+    return response.data;
+  } catch (error) {
+    console.log('Error with fetchUser api call: ', error);
+    dispatch({
+      type: 'SET_ACCESS_TOKEN',
+      accessToken: undefined,
+    });
+  }
+}
+
+
+
+export const getMyGroups = async (dispatch, accessToken) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${baseUrl}/list-my-groups/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    console.log('PROFILES: ', response);
+    dispatch({
+      type: 'SET_GROUPS',
+      profile: response.data,
+    });
+    return response.data;
+  } catch (error) {
+    console.log('Error with fetchUser api call: ', error);
+    dispatch({
+      type: 'SET_ACCESS_TOKEN',
+      accessToken: undefined,
+    });
+  }
+}
