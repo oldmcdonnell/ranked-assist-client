@@ -13,3 +13,19 @@ body {
 #page-content {
   flex-grow: 2;
 }
+
+
+
+button, .button {
+  border-color: black;
+  border-width: 2px;
+  border-radius: 30%;
+}
+.navBar{
+  text-decoration: none;
+  font: Arial;
+  color: rgb(11, 7, 40);
+  font-size: large;
+  /* z-index: 1000; */
+}
+

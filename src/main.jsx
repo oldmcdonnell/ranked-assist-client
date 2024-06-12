@@ -20,6 +20,7 @@ import { AuthContext } from './context'
 import CreateNewUser from './CreateNewUser'
 import { initialMainState, mainReducer } from './reducers/main-reducer';
 import CreateVote from './CreateVote'
+import MyProfile from './MyProfile'
 
 
 const Protected = ({ component }) => {
@@ -68,6 +69,10 @@ const router = createBrowserRouter([
       {
         path: '/createvote',
         element: <Protected component={<CreateVote />} /> 
+      },
+      {
+        path: '/myprofile',
+        element: <Protected component={<MyProfile />} /> 
       },
     ]
   }

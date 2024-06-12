@@ -7,6 +7,7 @@ export const initialMainState = JSONStorage ?? {
   users: [],
   profileImSeeing: [],
   groups: [],
+  votes: [],
 };
 
 export const mainReducer = (state, action) => {
@@ -57,6 +58,16 @@ export const mainReducer = (state, action) => {
             ...state,
         groups: action.groups,
     };
+    case 'ADD_VOTE':
+        const updatedVote = [...state.votes, action.vote];
+        localStorage.setItem(
+          'STATE',
+          JSON.stringify({ ...state, votes: updatedVote })
+        );
+        return {
+          ...state,
+          votes: updatedVote,
+    };      
     case 'LOGOUT':
       localStorage.removeItem('STATE');
       return {
@@ -64,7 +75,8 @@ export const mainReducer = (state, action) => {
         profile: {},
         friendGroups: [],
         users:[],
-        groups: []
+        groups: [],
+        votes: [],
       };
     default:
       return state;

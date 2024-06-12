@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const baseUrl = "http://127.0.0.1:8000";
-const baseUrl = "https://ranked-assist-server.fly.dev";
+const baseUrl = "http://127.0.0.1:8000";
+// const baseUrl = "https://ranked-assist-server.fly.dev";
 
 export const getToken = async ({ dispatch, username, password }) => {
   try {
@@ -113,13 +113,15 @@ export const createFriendGroup = async ({ accessToken, dispatch, users, note }) 
 
 
 export const getFriendsGroups = async (accessToken) => {
-  const response = await axios.get(`${baseUrl}/friends-groups/`, {
+  const response = await axios.get(`${baseUrl}/list-friend-groups/`, {
     headers: {
       Authorization: `Bearer ${accessToken}`
     }
   });
   return response.data;
 };
+
+
 
 export const fetchCandidates = async (dispatch, accessToken) => {
   try {
@@ -146,18 +148,30 @@ export const fetchCandidates = async (dispatch, accessToken) => {
 };
 
 
-export const createVote = async ({ title, details, pollsClose, accessToken }) => {
-  const response = await axios.post(`${baseUrl}/votes/`, {
-    title,
-    details,
-    polls_close: pollsClose
-  }, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`
-    }
-  });
-  return response.data;
+export const createVote = async ({ dispatch, title, details, accessToken, friendsGroup }) => {
+  try {
+    const response = await axios.post(`${baseUrl}/create-vote/`, {
+      title,
+      details,
+      friends_group: friendsGroup,
+    }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+
+    dispatch({
+      type: 'ADD_VOTE',
+      vote: response.data, // Assuming the response.data contains the created vote
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error creating vote:', error);
+    throw error;
+  }
 };
+
 
 
 export const createCandidate = async ({ voteId, profileId, description, accessToken }) => {
