@@ -51,6 +51,7 @@ export const fetchUser = async ({ dispatch, accessToken }) => {
 
 export const createUser = async ({ username, password, firstName, lastName, email }) => {
   try {
+    console.log('Email in API ', email)
     const response = await axios({
       method: 'post',
       url: `${baseUrl}/create-user/`,
@@ -59,7 +60,7 @@ export const createUser = async ({ username, password, firstName, lastName, emai
         password,
         first_name: firstName,
         last_name: lastName,
-        email,
+        email: email,
       },
     });
     console.log('CREATE USER: ', response);
@@ -111,19 +112,63 @@ export const createFriendGroup = async ({ accessToken, dispatch, users, note }) 
 };
 
 
-
-/*-
-
-we need a send email function 
-export const sendResults = async ({ accessToken, dispatch, friendGroup}) => {
-  const response await axios({
-    try{
-
-    } catch (error){
-      console.log('ERROR), error
+export const getFriendsGroups = async (accessToken) => {
+  const response = await axios.get(`${baseUrl}/friends-groups/`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
     }
+  });
+  return response.data;
+};
 
-  })
-}
+export const fetchCandidates = async (dispatch, accessToken) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${baseUrl}/get-candidate/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    console.log('PROFILE: ', response);
+    dispatch({
+      type: 'SET_PROFILE',
+      profile: response.data,
+    });
+    return response.data;
+  } catch (error) {
+    console.log('Error with fetchUser api call: ', error);
+    dispatch({
+      type: 'SET_ACCESS_TOKEN',
+      accessToken: undefined,
+    });
+  }
+};
 
--*/
+
+export const createVote = async ({ title, details, pollsClose, accessToken }) => {
+  const response = await axios.post(`${baseUrl}/votes/`, {
+    title,
+    details,
+    polls_close: pollsClose
+  }, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+  return response.data;
+};
+
+
+export const createCandidate = async ({ voteId, profileId, description, accessToken }) => {
+  const response = await axios.post(`${baseUrl}/candidates/`, {
+    vote: voteId,
+    profile: profileId,
+    description
+  }, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+  return response.data;
+};

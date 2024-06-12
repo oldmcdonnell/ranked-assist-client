@@ -12,8 +12,9 @@ function CreateNewUser() {
   const navigate = useNavigate();
 
   const submit = async () => {
+    console.log('Email: ', email)
     try {
-      const response = await createUser({ username, password, firstName, lastName });
+      const response = await createUser({ username, password, firstName, lastName, email });
       if (response.success) {
         // Clear the input fields
         setUsername('');

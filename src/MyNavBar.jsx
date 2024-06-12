@@ -14,6 +14,7 @@ function MyNavbar() {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="mx-auto Navbar col-m-6">
             <Link className="text-black-50 px-3 navBar" to="/">Home</Link>
+            {/* <Link className="text-black-50 px-3 navBar" to="/CreateVote">Create a new Vote</Link> */}
           </Nav>
         </Navbar.Collapse>
     </Container>
