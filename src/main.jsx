@@ -21,6 +21,7 @@ import CreateNewUser from './CreateNewUser'
 import { initialMainState, mainReducer } from './reducers/main-reducer';
 import CreateVote from './CreateVote'
 import MyProfile from './MyProfile'
+import OpenEnrollment from './OpenEnrollment'
 
 
 const Protected = ({ component }) => {
@@ -74,6 +75,10 @@ const router = createBrowserRouter([
         path: '/myprofile',
         element: <Protected component={<MyProfile />} /> 
       },
+      {
+        path: '/openenrollment/:voteId', // This route correctly uses the URL parameter
+        element: <Protected component={<OpenEnrollment />} /> 
+      },,
     ]
   }
 ])

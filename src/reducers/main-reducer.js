@@ -3,11 +3,12 @@ const JSONStorage = JSON.parse(localStorage.getItem('STATE'));
 export const initialMainState = JSONStorage ?? {
   accessToken: '',
   profile: {},
-  friendGroups: [], // Initialize friendGroups as an empty array
+  friendGroups: [], 
   users: [],
   profileImSeeing: [],
   groups: [],
   votes: [],
+  voteId: '',
 };
 
 export const mainReducer = (state, action) => {
@@ -21,6 +22,15 @@ export const mainReducer = (state, action) => {
         ...state,
         accessToken: action.accessToken,
       };
+    case 'SET_VOTE_ID':
+        localStorage.setItem(
+          'STATE',
+          JSON.stringify({ ...state, voteId: action.voteId })
+        );
+        return {
+          ...state,
+          voteId: action.voteId,
+        };
     case 'SET_PROFILE':
       localStorage.setItem(
         'STATE',
@@ -77,6 +87,7 @@ export const mainReducer = (state, action) => {
         users:[],
         groups: [],
         votes: [],
+        voteId,
       };
     default:
       return state;

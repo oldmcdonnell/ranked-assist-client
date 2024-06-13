@@ -123,27 +123,31 @@ export const getFriendsGroups = async (accessToken) => {
 
 
 
-export const fetchCandidates = async (dispatch, accessToken) => {
+export const fetchCandidates = async ( accessToken, voteId) => {
+  console.log('fetch canddates', accessToken)
   try {
     const response = await axios({
       method: 'get',
-      url: `${baseUrl}/get-candidate/`,
+      url: `${baseUrl}/fetch-candidates/`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
+      data:{
+        voteId
+      }
     });
     console.log('PROFILE: ', response);
-    dispatch({
-      type: 'SET_PROFILE',
-      profile: response.data,
-    });
+    // dispatch({
+    //   type: 'SET_PROFILE',
+    //   profile: response.data,
+    // });
     return response.data;
   } catch (error) {
     console.log('Error with fetchUser api call: ', error);
-    dispatch({
-      type: 'SET_ACCESS_TOKEN',
-      accessToken: undefined,
-    });
+    // dispatch({
+    //   type: 'SET_ACCESS_TOKEN',
+    //   accessToken: undefined,
+    // });
   }
 };
 
@@ -174,18 +178,7 @@ export const createVote = async ({ dispatch, title, details, accessToken, friend
 
 
 
-export const createCandidate = async ({ voteId, profileId, description, accessToken }) => {
-  const response = await axios.post(`${baseUrl}/candidates/`, {
-    vote: voteId,
-    profile: profileId,
-    description
-  }, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`
-    }
-  });
-  return response.data;
-};
+
 
 
 export const getAllProfiles = async (dispatch, accessToken) => {
@@ -223,17 +216,68 @@ export const getMyGroups = async (dispatch, accessToken) => {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    console.log('PROFILES: ', response);
+    console.log('Groups: ', response);
     dispatch({
       type: 'SET_GROUPS',
       profile: response.data,
     });
     return response.data;
   } catch (error) {
-    console.log('Error with fetchUser api call: ', error);
+    console.log('Error getmyGroups: ', error);
     dispatch({
       type: 'SET_ACCESS_TOKEN',
       accessToken: undefined,
     });
+  }
+}
+
+export const updateVote = async (accessToken, voteId, candidate) => {
+  console.log('API vote ID ',voteId, accessToken)
+  try{
+
+    const response = await axios({
+      method: 'PUT',
+      url: `${baseUrl}/update-vote/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        vote_id: voteId,
+        candidate,
+      }
+    })
+    console.log('PROFILES: ', response);
+    dispatch({
+      type: 'SET_VOTE',
+      profile: response.data,
+    });
+  } catch(error) {
+    console.log('update vote catch: ERROR: ', error)
+  }
+}
+
+
+export const createCandidate = async ({ accessToken, voteId, description }) => {
+  console.log('API vote ID ',voteId, accessToken)
+  try{
+
+    const response = await axios({
+      method: 'PUT',
+      url: `${baseUrl}/create-candidate/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        vote_id: voteId,
+        description,
+      }
+    })
+    console.log('PROFILES: ', response);
+    dispatch({
+      type: 'SET_VOTE',
+      profile: response.data,
+    });
+  } catch(error) {
+    console.log('Create vote catch: ERROR: ', error)
   }
 }

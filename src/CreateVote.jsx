@@ -4,7 +4,7 @@ import { AuthContext } from './context';
 import { getFriendsGroups, createVote, createCandidate } from './api'; // Import your API functions
 
 function CreateVote() {
-  const { state } = useContext(AuthContext);
+  const { state, dispatch } = useContext(AuthContext);
   const [title, setTitle] = useState('');
   const [details, setDetails] = useState('');
   const [candidates, setCandidates] = useState([]);
@@ -42,7 +42,8 @@ function CreateVote() {
         title,
         details,
         friendsGroup,
-        accessToken: state.accessToken
+        accessToken: state.accessToken,
+        dispatch,
       });
       for (const candidate of candidates) {
         await createCandidate({

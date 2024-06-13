@@ -36,7 +36,13 @@ function MyFriendGroups() {
               <p>{vote.details}</p>
               <p>Round: {vote.round}</p>
               <p>Polls close: {vote.polls_close}</p>
-              {/* <Link className="text-black-50 px-3 navBar" to="/">Home</Link> */}
+              <Link 
+                className="text-black-50 px-3 navBar" 
+                to={{
+                  pathname: `/openenrollment/${vote.id}`,
+                  state: { voteId: vote.id }
+                }}
+              >Go to the Vote</Link>
             </div>
           ))}
         </div>
