@@ -22,7 +22,7 @@ function OpenEnrollment() {
     };
 
     fetchVoteData();
-    const intervalFunc = setInterval(fetchVoteData, 10000); // Fetch every 10 seconds
+    const intervalFunc = setInterval(fetchVoteData, 1000000); // Fetch every 10 seconds
 
     return () => clearInterval(intervalFunc); // Clear interval on component unmount
   }, [state.accessToken, voteId]);
@@ -42,7 +42,7 @@ function OpenEnrollment() {
     try {
       for (const candidate of candidates) {
         if (!candidate.id) {
-          await createCandidate(state.accessToken, {
+          await createCandidate(accessToken = state.accessToken, {
             voteId,
             description: candidate.description,
           });

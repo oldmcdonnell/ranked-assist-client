@@ -123,17 +123,18 @@ export const getFriendsGroups = async (accessToken) => {
 
 
 
-export const fetchCandidates = async ( accessToken, voteId) => {
-  console.log('fetch canddates', accessToken)
+export const fetchCandidates = async ( accessToken, voteId, description) => {
+  console.log('fetch canddates', voteId, accessToken)
   try {
     const response = await axios({
-      method: 'get',
+      method: 'POST',
       url: `${baseUrl}/fetch-candidates/`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
       data:{
-        voteId
+        vote_id: voteId,
+        description: description
       }
     });
     console.log('PROFILE: ', response);
