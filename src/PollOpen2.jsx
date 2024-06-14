@@ -5,7 +5,7 @@ import { AuthContext } from "./context";
 
 function PollOpen2() {
 //   const { voteId } = useParams();
-    const voteId = 4
+    const voteId = 1
   const { state } = useContext(AuthContext);
   const [error, setError] = useState(null);
   const [candidates, setCandidates] = useState([]);
