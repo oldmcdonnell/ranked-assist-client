@@ -259,18 +259,15 @@ export const updateVote = async (accessToken, voteId, candidate) => {
   }
 }
 
-import axios from 'axios';
 
 export const createCandidate = async ({ accessToken, voteId, description }) => {
   console.log('create candidate vote ID ', voteId, accessToken);
   try {
-    const csrfToken = document.cookie.match(/csrftoken=([^;]+)/)[1]; // Get CSRF token from cookies
     const response = await axios({
-      method: 'POST',
+      method: 'PUT',
       url: `${baseUrl}/create-candidate/`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        'X-CSRFToken': csrfToken,
       },
       data: {
         vote_id: voteId,

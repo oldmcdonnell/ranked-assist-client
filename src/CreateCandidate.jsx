@@ -6,7 +6,7 @@ function CreateCandidate() {
   const { state } = useContext(AuthContext);
   const [description, setDescription] = useState('');
   const [error, setError] = useState(null);
-  const voteId = 1; // Temporary for testing
+  const voteId = '1'; // Temporary for testing
 
   const submit = async () => {
     try {

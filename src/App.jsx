@@ -1,6 +1,7 @@
 import UserList from "./UserList"
 import CreateFriendGroupForm from "./CreateFriendGroupForm"
 import CreateCandidate from "./CreateCandidate"
+import PollOpen from "./PollOpen"
 
 function App() {
 
@@ -9,6 +10,7 @@ function App() {
       <UserList />
       <CreateFriendGroupForm />
       <CreateCandidate />
+      <PollOpen />
 
     </div>
   )
