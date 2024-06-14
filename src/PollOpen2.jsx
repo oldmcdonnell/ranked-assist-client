@@ -9,7 +9,7 @@ function PollOpen2() {
   const { state } = useContext(AuthContext);
   const [error, setError] = useState(null);
   const [candidates, setCandidates] = useState([]);
-  const [userVote, setUserVote] = useState({}); // User's ranking
+  const [userVote, setUserVote] = useState({}); // User's ranking?
 
   useEffect(() => {
     const fetchVoteData = async () => {
