@@ -6,25 +6,24 @@ import { AuthContext } from "./context";
 function OpenEnrollment() {
   const { voteId } = useParams();
   const { state } = useContext(AuthContext);
-  const [vote, setVote] = useState(null);
   const [candidates, setCandidates] = useState([]);
   const [error, setError] = useState(null);
+  const [description, setDescription] = useState('');
 
   useEffect(() => {
     const fetchVoteData = async () => {
       try {
-        // Fetch candidates for the vote
-        const candidatesData = await fetchCandidates(state.accessToken, voteId);
-        setCandidates(candidatesData || []); // Ensure candidates is always an array
+        const candidatesData = await fetchCandidates({accessToken: state.accessToken, voteId});
+        setCandidates(candidatesData || []);
       } catch (error) {
         setError(error.response ? error.response.data : error.message);
       }
     };
 
     fetchVoteData();
-    const intervalFunc = setInterval(fetchVoteData, 1000000); // Fetch every 10 seconds
+    const intervalFunc = setInterval(fetchVoteData, 10000000000);
 
-    return () => clearInterval(intervalFunc); // Clear interval on component unmount
+    return () => clearInterval(intervalFunc);
   }, [state.accessToken, voteId]);
 
   const handleAddCandidate = () => {
@@ -42,14 +41,14 @@ function OpenEnrollment() {
     try {
       for (const candidate of candidates) {
         if (!candidate.id) {
-          await createCandidate(accessToken = state.accessToken, {
+          await createCandidate({
+            accessToken: state.accessToken,
             voteId,
             description: candidate.description,
           });
         }
       }
-      // Optionally, fetch updated candidates data after submission
-      const updatedCandidates = await fetchCandidates(state.accessToken, voteId);
+      const updatedCandidates = await fetchCandidates({accessToken: state.accessToken, voteId});
       setCandidates(updatedCandidates || []);
     } catch (error) {
       setError(error.response ? error.response.data : error.message);
@@ -64,7 +63,7 @@ function OpenEnrollment() {
     <div>
       <h2>Open Enrollment</h2>
       <form onSubmit={handleSubmit}>
-        {candidates.length > 0 && candidates.map((candidate, index) => (
+        {candidates.map((candidate, index) => (
           <div key={index}>
             <input
               type="text"

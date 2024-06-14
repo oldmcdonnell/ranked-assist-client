@@ -123,7 +123,7 @@ export const getFriendsGroups = async (accessToken) => {
 
 
 
-export const fetchCandidates = async ( accessToken, voteId, description) => {
+export const fetchCandidates = async ({ accessToken, voteId, description}) => {
   console.log('fetch canddates', voteId, accessToken)
   try {
     const response = await axios({
@@ -131,13 +131,14 @@ export const fetchCandidates = async ( accessToken, voteId, description) => {
       url: `${baseUrl}/fetch-candidates/`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
+        // headers: {'X-CSRFToken': csrftoken},
       },
       data:{
         vote_id: voteId,
         description: description
       }
     });
-    console.log('PROFILE: ', response);
+    console.log('Candidate fetch: ', response);
     // dispatch({
     //   type: 'SET_PROFILE',
     //   profile: response.data,
@@ -259,7 +260,7 @@ export const updateVote = async (accessToken, voteId, candidate) => {
 
 
 export const createCandidate = async ({ accessToken, voteId, description }) => {
-  console.log('API vote ID ',voteId, accessToken)
+  console.log('create candidate vote ID ',voteId, accessToken)
   try{
 
     const response = await axios({
@@ -273,12 +274,35 @@ export const createCandidate = async ({ accessToken, voteId, description }) => {
         description,
       }
     })
-    console.log('PROFILES: ', response);
-    dispatch({
-      type: 'SET_VOTE',
-      profile: response.data,
-    });
+    console.log('candidates: ', response);
+    // dispatch({
+    //   type: 'SET_VOTE',
+    //   profile: response.data,
+    // });
   } catch(error) {
     console.log('Create vote catch: ERROR: ', error)
   }
 }
+
+
+// export const createCandidate = async (accessToken, { voteId, description }) => {
+//   console.log('create candidate vote ID:', voteId); // Debug log
+//   console.log('create candidate accessToken:', accessToken); // Debug log
+//   try {
+//     const response = await axios({
+//       method: 'PUT',
+//       url: `${baseUrl}/create-candidate/`,
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//       },
+//       data: {
+//         vote_id: voteId,
+//         description,
+//       }
+//     });
+//     return response.data;
+//   } catch (error) {
+//     console.error('Create candidate error:', error);
+//     throw error;
+//   }
+// };
