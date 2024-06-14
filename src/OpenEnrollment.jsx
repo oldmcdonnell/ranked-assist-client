@@ -8,12 +8,12 @@ function OpenEnrollment() {
   const { state } = useContext(AuthContext);
   const [candidates, setCandidates] = useState([]);
   const [error, setError] = useState(null);
-  const [description, setDescription] = useState('');
 
   useEffect(() => {
     const fetchVoteData = async () => {
       try {
-        const candidatesData = await fetchCandidates({accessToken: state.accessToken, voteId});
+        const candidatesData = await fetchCandidates({ accessToken: state.accessToken, voteId });
+        console.log('Fetched candidates:', candidatesData); // Log fetched candidates
         setCandidates(candidatesData || []);
       } catch (error) {
         setError(error.response ? error.response.data : error.message);
@@ -21,7 +21,7 @@ function OpenEnrollment() {
     };
 
     fetchVoteData();
-    const intervalFunc = setInterval(fetchVoteData, 10000000000);
+    const intervalFunc = setInterval(fetchVoteData, 1000000); // Fetch every so often
 
     return () => clearInterval(intervalFunc);
   }, [state.accessToken, voteId]);
@@ -48,7 +48,7 @@ function OpenEnrollment() {
           });
         }
       }
-      const updatedCandidates = await fetchCandidates({accessToken: state.accessToken, voteId});
+      const updatedCandidates = await fetchCandidates({ accessToken: state.accessToken, voteId });
       setCandidates(updatedCandidates || []);
     } catch (error) {
       setError(error.response ? error.response.data : error.message);

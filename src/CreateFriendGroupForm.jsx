@@ -7,6 +7,7 @@ function CreateFriendGroupForm() {
   const { state, dispatch } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [title, setTitle] = useState('')
   const [note, setNote] = useState('');
   const [error, setError] = useState(null);
 
@@ -38,11 +39,13 @@ function CreateFriendGroupForm() {
         accessToken: state.accessToken,
         dispatch,
         users: selectedUsers,
+        title,
         note,
       });
       // Clear the form after successful submission
       setSelectedUsers([]);
       setNote('');
+      setTitle('')
     } catch (error) {
       setError(error.response ? error.response.data : error.message);
     }
@@ -56,13 +59,23 @@ function CreateFriendGroupForm() {
     <div>
       <h1>Create Friend Group</h1>
       <form onSubmit={handleSubmit}>
+      <div>
+          <label>Title:</label>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder='Title'
+            required
+          />
+        </div>
         <div>
           <label>Note:</label>
           <input
             type="text"
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            required
+            placeholder='note (optional)'
           />
         </div>
         <div>

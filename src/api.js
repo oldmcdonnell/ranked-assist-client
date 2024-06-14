@@ -89,7 +89,7 @@ export const listUsers = async ({ accessToken, dispatch }) => {
   }
 };
 
-export const createFriendGroup = async ({ accessToken, dispatch, users, note }) => {
+export const createFriendGroup = async ({ accessToken, dispatch, users, title, note }) => {
   console.log('create friend group', accessToken);
   try {
     const response = await axios({
@@ -100,6 +100,7 @@ export const createFriendGroup = async ({ accessToken, dispatch, users, note }) 
       },
       data: {
         users,
+        title,
         note,
       },
     });
@@ -260,9 +261,8 @@ export const updateVote = async (accessToken, voteId, candidate) => {
 
 
 export const createCandidate = async ({ accessToken, voteId, description }) => {
-  console.log('create candidate vote ID ',voteId, accessToken)
-  try{
-
+  console.log('create candidate vote ID ', voteId, accessToken);
+  try {
     const response = await axios({
       method: 'PUT',
       url: `${baseUrl}/create-candidate/`,
@@ -273,16 +273,15 @@ export const createCandidate = async ({ accessToken, voteId, description }) => {
         vote_id: voteId,
         description,
       }
-    })
+    });
     console.log('candidates: ', response);
-    // dispatch({
-    //   type: 'SET_VOTE',
-    //   profile: response.data,
-    // });
-  } catch(error) {
-    console.log('Create vote catch: ERROR: ', error)
+    return response.data;
+  } catch (error) {
+    console.log('Create candidate error: ', error);
+    throw error;
   }
-}
+};
+
 
 
 // export const createCandidate = async (accessToken, { voteId, description }) => {
