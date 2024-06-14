@@ -3,13 +3,13 @@ import { useParams } from "react-router-dom";
 import { fetchCandidates } from "./api";
 import { AuthContext } from "./context";
 
-function PollOpen() {
+function PollOpen2() {
 //   const { voteId } = useParams();
     const voteId = 4
   const { state } = useContext(AuthContext);
   const [error, setError] = useState(null);
   const [candidates, setCandidates] = useState([]);
-  const [userVote, setUserVote] = useState([]); // User's ranking
+  const [userVote, setUserVote] = useState({}); // User's ranking
 
   useEffect(() => {
     const fetchVoteData = async () => {
@@ -29,10 +29,22 @@ function PollOpen() {
     fetchVoteData();
   }, [state.accessToken, voteId]);
 
-  const handleVoteChange = (candidateIndex, rank) => {
-    const newUserVote = [...userVote];
-    newUserVote[candidateIndex] = rank;
-    setUserVote(newUserVote);
+  const handleVoteChange = (candidateId, rank) => {
+    // Check if the rank is already used
+    if (Object.values(userVote).includes(rank)) {
+      // Find the candidate with the same rank and remove the rank
+      const updatedVote = { ...userVote };
+      for (const key in updatedVote) {
+        if (updatedVote[key] === rank) {
+          delete updatedVote[key];
+          break;
+        }
+      }
+      // Set the new rank for the current candidate
+      setUserVote({ ...updatedVote, [candidateId]: rank });
+    } else {
+      setUserVote({ ...userVote, [candidateId]: rank });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -58,26 +70,22 @@ function PollOpen() {
           <thead>
             <tr>
               <th>Candidate</th>
-              {candidates.map((_, rankIndex) => (
-                <th key={rankIndex}>{`Rank ${rankIndex + 1}`}</th>
-              ))}
+              <th>Rank</th>
             </tr>
           </thead>
           <tbody>
-            {candidates.map((candidate, candidateIndex) => (
+            {candidates.map((candidate) => (
               <tr key={candidate.id}>
                 <td>{candidate.description}</td>
-                {candidates.map((_, rankIndex) => (
-                  <td key={rankIndex}>
-                    <input
-                      type="radio"
-                      name={`rank-${rankIndex + 1}`}
-                      value={candidateIndex}
-                      checked={userVote[candidateIndex] === rankIndex + 1}
-                      onChange={() => handleVoteChange(candidateIndex, rankIndex + 1)}
-                    />
-                  </td>
-                ))}
+                <td>
+                  <input
+                    type="number"
+                    min="1"
+                    max={candidates.length}
+                    value={userVote[candidate.id] || ""}
+                    onChange={(e) => handleVoteChange(candidate.id, parseInt(e.target.value, 10))}
+                  />
+                </td>
               </tr>
             ))}
           </tbody>
@@ -88,4 +96,4 @@ function PollOpen() {
   );
 }
 
-export default PollOpen;
+export default PollOpen2;
