@@ -11,7 +11,8 @@ function MyFriendGroups() {
   useEffect(() => {
     const fetchGroups = async () => {
       try {
-        const data = await getMyGroups(dispatch, state.accessToken);
+        const data = await getMyGroups({dispatch,
+          accessToken: state.accessToken});
         setGroups(data);
       } catch (error) {
         setError(error.response ? error.response.data : error.message);

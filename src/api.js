@@ -210,7 +210,7 @@ export const getAllProfiles = async (dispatch, accessToken) => {
 
 
 
-export const getMyGroups = async (dispatch, accessToken) => {
+export const getMyGroups = async ({dispatch, accessToken}) => {
   try {
     const response = await axios({
       method: 'get',
@@ -234,10 +234,9 @@ export const getMyGroups = async (dispatch, accessToken) => {
   }
 }
 
-export const updateVote = async (accessToken, voteId, candidate) => {
-  console.log('API vote ID ',voteId, accessToken)
-  try{
-
+export const updateVote = async ({ accessToken, voteId, candidate, count, round, dispatch }) => {
+  console.log('API vote ID ', voteId, accessToken);
+  try {
     const response = await axios({
       method: 'PUT',
       url: `${baseUrl}/update-vote/`,
@@ -247,17 +246,24 @@ export const updateVote = async (accessToken, voteId, candidate) => {
       data: {
         vote_id: voteId,
         candidate,
-      }
-    })
-    console.log('PROFILES: ', response);
-    dispatch({
-      type: 'SET_VOTE',
-      profile: response.data,
+        count,
+        round,
+      },
     });
-  } catch(error) {
-    console.log('update vote catch: ERROR: ', error)
+    console.log('updated vote info(api): ', response);
+    if (dispatch) {
+      dispatch({
+        type: 'SET_COUNT',
+        count: response.data.count,
+      });
+    }
+    return response.data;
+  } catch (error) {
+    console.log('update vote catch: ERROR: ', error);
+    throw error;
   }
-}
+};
+
 
 
 export const createCandidate = async ({ accessToken, voteId, description }) => {

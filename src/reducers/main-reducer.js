@@ -3,12 +3,14 @@ const JSONStorage = JSON.parse(localStorage.getItem('STATE'));
 export const initialMainState = JSONStorage ?? {
   accessToken: '',
   profile: {},
-  friendGroups: [], 
+  friendGroups: [],
   users: [],
   profileImSeeing: [],
   groups: [],
   votes: [],
   voteId: '',
+  count: [],
+  candidates: [],
 };
 
 export const mainReducer = (state, action) => {
@@ -23,14 +25,14 @@ export const mainReducer = (state, action) => {
         accessToken: action.accessToken,
       };
     case 'SET_VOTE_ID':
-        localStorage.setItem(
-          'STATE',
-          JSON.stringify({ ...state, voteId: action.voteId })
-        );
-        return {
-          ...state,
-          voteId: action.voteId,
-        };
+      localStorage.setItem(
+        'STATE',
+        JSON.stringify({ ...state, voteId: action.voteId })
+      );
+      return {
+        ...state,
+        voteId: action.voteId,
+      };
     case 'SET_PROFILE':
       localStorage.setItem(
         'STATE',
@@ -50,44 +52,77 @@ export const mainReducer = (state, action) => {
         ...state,
         friendGroups: updatedFriendGroups,
       };
+    case 'SET_COUNT':
+      localStorage.setItem(
+        'STATE',
+        JSON.stringify({ ...state, count: action.count })
+      );
+      return {
+        ...state,
+        count: action.count,
+      };
     case 'SET_USERS':
-        localStorage.setItem(
-          'STATE',
-          JSON.stringify({ ...state, users: action.users })
-        );
-        return {
-          ...state,
-          users: action.users,
-        };
+      localStorage.setItem(
+        'STATE',
+        JSON.stringify({ ...state, users: action.users })
+      );
+      return {
+        ...state,
+        users: action.users,
+      };
     case 'SET_GROUPS':
-        localStorage.setItem(
-            'STATE',
+      localStorage.setItem(
+        'STATE',
         JSON.stringify({ ...state, groups: action.groups })
-        );
-        return {
-            ...state,
+      );
+      return {
+        ...state,
         groups: action.groups,
-    };
+      };
     case 'ADD_VOTE':
-        const updatedVote = [...state.votes, action.vote];
-        localStorage.setItem(
-          'STATE',
-          JSON.stringify({ ...state, votes: updatedVote })
-        );
-        return {
-          ...state,
-          votes: updatedVote,
-    };      
+      const updatedVotes = [...state.votes, action.vote];
+      localStorage.setItem(
+        'STATE',
+        JSON.stringify({ ...state, votes: updatedVotes })
+      );
+      return {
+        ...state,
+        votes: updatedVotes,
+      };
+    case 'UPDATE_VOTE':
+      const updatedVoteList = state.votes.map(vote =>
+        vote.id === action.vote.id ? action.vote : vote
+      );
+      localStorage.setItem(
+        'STATE',
+        JSON.stringify({ ...state, votes: updatedVoteList })
+      );
+      return {
+        ...state,
+        votes: updatedVoteList,
+        candidates: action.candidates,
+      };
+    case 'SET_CANDIDATES':
+      localStorage.setItem(
+        'STATE',
+        JSON.stringify({ ...state, candidates: action.candidates })
+      );
+      return {
+        ...state,
+        candidates: action.candidates,
+      };
     case 'LOGOUT':
       localStorage.removeItem('STATE');
       return {
         accessToken: '',
         profile: {},
         friendGroups: [],
-        users:[],
+        users: [],
         groups: [],
         votes: [],
-        voteId,
+        voteId: '',
+        count: [],
+        candidates: [],
       };
     default:
       return state;

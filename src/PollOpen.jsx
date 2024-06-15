@@ -1,15 +1,14 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { fetchCandidates } from "./api";
+import { fetchCandidates, updateVote } from "./api";
 import { AuthContext } from "./context";
 
 function PollOpen() {
-//   const { voteId } = useParams();
-    const voteId = 4
-  const { state } = useContext(AuthContext);
+  var voteId = 4
+  const { state, dispatch } = useContext(AuthContext);
   const [error, setError] = useState(null);
   const [candidates, setCandidates] = useState([]);
-  const [userVote, setUserVote] = useState([]); // User's ranking
+  const [userVote, setUserVote] = useState({}); // User's ranking
 
   useEffect(() => {
     const fetchVoteData = async () => {
@@ -20,27 +19,48 @@ function PollOpen() {
         });
         console.log("Fetched candidates:", candidatesData); // Log fetched candidates
         setCandidates(candidatesData || []);
-        setUserVote(new Array(candidatesData.length).fill(null)); // Initialize userVote with nulls
+        dispatch({
+          type: 'SET_CANDIDATES',
+          candidates: candidatesData,
+        });
       } catch (error) {
         setError(error.response ? error.response.data : error.message);
       }
     };
 
     fetchVoteData();
-  }, [state.accessToken, voteId]);
+  }, [state.accessToken, voteId, dispatch]);
 
-  const handleVoteChange = (candidateIndex, rank) => {
-    const newUserVote = [...userVote];
-    newUserVote[candidateIndex] = rank;
-    setUserVote(newUserVote);
+  const handleVoteChange = (candidateId, rank) => {
+    if (Object.values(userVote).includes(rank)) {
+      const updatedVote = { ...userVote };
+      for (const key in updatedVote) {
+        if (updatedVote[key] === rank) {
+          delete updatedVote[key];
+          break;
+        }
+      }
+      setUserVote({ ...updatedVote, [candidateId]: rank });
+    } else {
+      setUserVote({ ...userVote, [candidateId]: rank });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Submit userVote here
+      await updateVote({
+        accessToken: state.accessToken,
+        voteId,
+        candidates: Object.keys(userVote).map(candidateId => ({
+          id: candidateId,
+          count: userVote[candidateId],
+        })),
+        round: 1, // Example round value
+        count: Object.keys(userVote).length, // Example count value
+        dispatch,
+      });
       console.log("User vote submitted:", userVote);
-      // Add submission logic here
     } catch (error) {
       setError(error.response ? error.response.data : error.message);
     }
@@ -58,26 +78,22 @@ function PollOpen() {
           <thead>
             <tr>
               <th>Candidate</th>
-              {candidates.map((_, rankIndex) => (
-                <th key={rankIndex}>{`Rank ${rankIndex + 1}`}</th>
-              ))}
+              <th>Rank</th>
             </tr>
           </thead>
           <tbody>
-            {candidates.map((candidate, candidateIndex) => (
+            {candidates.map((candidate) => (
               <tr key={candidate.id}>
                 <td>{candidate.description}</td>
-                {candidates.map((_, rankIndex) => (
-                  <td key={rankIndex}>
-                    <input
-                      type="radio"
-                      name={`rank-${rankIndex + 1}`}
-                      value={candidateIndex}
-                      checked={userVote[candidateIndex] === rankIndex + 1}
-                      onChange={() => handleVoteChange(candidateIndex, rankIndex + 1)}
-                    />
-                  </td>
-                ))}
+                <td>
+                  <input
+                    type="number"
+                    min="1"
+                    max={candidates.length}
+                    value={userVote[candidate.id] || ""}
+                    onChange={(e) => handleVoteChange(candidate.id, parseInt(e.target.value, 10))}
+                  />
+                </td>
               </tr>
             ))}
           </tbody>
