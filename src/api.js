@@ -288,26 +288,22 @@ export const createCandidate = async ({ accessToken, voteId, description }) => {
   }
 };
 
-
-
-// export const createCandidate = async (accessToken, { voteId, description }) => {
-//   console.log('create candidate vote ID:', voteId); // Debug log
-//   console.log('create candidate accessToken:', accessToken); // Debug log
-//   try {
-//     const response = await axios({
-//       method: 'PUT',
-//       url: `${baseUrl}/create-candidate/`,
-//       headers: {
-//         Authorization: `Bearer ${accessToken}`,
-//       },
-//       data: {
-//         vote_id: voteId,
-//         description,
-//       }
-//     });
-//     return response.data;
-//   } catch (error) {
-//     console.error('Create candidate error:', error);
-//     throw error;
-//   }
-// };
+export const fetchVoteResults = async ({ accessToken, voteId }) => {
+  try {
+    const response = await axios({
+      method: 'POST',
+      url: `${baseUrl}/vote-results/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        vote_id: voteId,
+      },
+    });
+    console.log('Vote results: ', response.data);
+    return response.data;
+  } catch (error) {
+    console.log('Fetch vote results error: ', error);
+    throw error;
+  }
+};

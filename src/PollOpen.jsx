@@ -4,6 +4,7 @@ import { fetchCandidates, updateVote } from "./api";
 import { AuthContext } from "./context";
 
 function PollOpen() {
+  // const { voteId } = useParams();
   var voteId = 4
   const { state, dispatch } = useContext(AuthContext);
   const [error, setError] = useState(null);
@@ -23,6 +24,10 @@ function PollOpen() {
           type: 'SET_CANDIDATES',
           candidates: candidatesData,
         });
+        dispatch({
+          type: 'SET_VOTE_ID',
+          voteId: voteId,
+        });
       } catch (error) {
         setError(error.response ? error.response.data : error.message);
       }
@@ -32,23 +37,21 @@ function PollOpen() {
   }, [state.accessToken, voteId, dispatch]);
 
   const handleVoteChange = (candidateId, rank) => {
-    if (Object.values(userVote).includes(rank)) {
-      const updatedVote = { ...userVote };
-      for (const key in updatedVote) {
-        if (updatedVote[key] === rank) {
-          delete updatedVote[key];
-          break;
-        }
-      }
-      setUserVote({ ...updatedVote, [candidateId]: rank });
-    } else {
+    if (rank === "" || (rank > 0 && rank <= candidates.length && !Object.values(userVote).includes(rank))) {
       setUserVote({ ...userVote, [candidateId]: rank });
+    } else {
+      const updatedVote = { ...userVote };
+      delete updatedVote[candidateId];
+      setUserVote(updatedVote);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log("User vote submitted:", userVote);
+      console.log("Dispatch function:", dispatch);
+
       await updateVote({
         accessToken: state.accessToken,
         voteId,
@@ -91,7 +94,7 @@ function PollOpen() {
                     min="1"
                     max={candidates.length}
                     value={userVote[candidate.id] || ""}
-                    onChange={(e) => handleVoteChange(candidate.id, parseInt(e.target.value, 10))}
+                    onChange={(e) => handleVoteChange(candidate.id, e.target.value ? parseInt(e.target.value, 10) : "")}
                   />
                 </td>
               </tr>
