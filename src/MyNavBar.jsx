@@ -8,7 +8,7 @@ import Logout from './Logout';
 function MyNavbar() {
     return (
     <Navbar collapseOnSelect expand="lg" className='bg-body-tertiary'>
-    <Navbar.Brand href="#">Ranked Choice Assistant</Navbar.Brand>
+    <Navbar.Brand href="#">Preferred Polls</Navbar.Brand>
     <Container>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">

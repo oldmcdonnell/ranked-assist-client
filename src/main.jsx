@@ -22,6 +22,8 @@ import { initialMainState, mainReducer } from './reducers/main-reducer';
 import CreateVote from './CreateVote'
 import MyProfile from './MyProfile'
 import OpenEnrollment from './OpenEnrollment'
+import VoteResults from './VoteResults'
+import PollOpen from './PollOpen'
 
 
 const Protected = ({ component }) => {
@@ -78,6 +80,14 @@ const router = createBrowserRouter([
       {
         path: '/openenrollment/:voteId', // This route correctly uses the URL parameter
         element: <Protected component={<OpenEnrollment />} /> 
+      },,
+      {
+        path: '/pollopen/:voteId', // This route correctly uses the URL parameter
+        element: <Protected component={<PollOpen />} /> 
+      },,
+      {
+        path: '/voteresults/:voteId', // This route correctly uses the URL parameter
+        element: <Protected component={<VoteResults />} /> 
       },,
     ]
   }

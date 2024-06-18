@@ -1,7 +1,10 @@
 import axios from 'axios';
 
+const baseUrl = import.meta.env.VITE_BASE_URL
+// console.log(baseUrl)
+
 // const baseUrl = "http://127.0.0.1:8000";
-const baseUrl = "https://ranked-assist-server.fly.dev";
+// const baseUrl = "https://ranked-assist-server.fly.dev";
 
 export const getToken = async ({ dispatch, username, password }) => {
   try {
@@ -288,24 +291,117 @@ export const createCandidate = async ({ accessToken, voteId, description }) => {
 
 
 
-// export const createCandidate = async (accessToken, { voteId, description }) => {
-//   console.log('create candidate vote ID:', voteId); // Debug log
-//   console.log('create candidate accessToken:', accessToken); // Debug log
-//   try {
-//     const response = await axios({
-//       method: 'PUT',
-//       url: `${baseUrl}/create-candidate/`,
-//       headers: {
-//         Authorization: `Bearer ${accessToken}`,
-//       },
-//       data: {
-//         vote_id: voteId,
-//         description,
-//       }
-//     });
-//     return response.data;
-//   } catch (error) {
-//     console.error('Create candidate error:', error);
-//     throw error;
-//   }
-// };
+export const fetchVoteResults = async ({ accessToken, voteId }) => {
+  try {
+    const response = await axios({
+      method: 'POST',
+      url: `${baseUrl}/vote-results/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        vote_id: voteId,
+      }
+    });
+    console.log('Vote results: ', response.data);
+    return response.data;
+  } catch (error) {
+    console.log('Fetch vote results error: ', error);
+    throw error;
+  }
+};
+
+
+
+export const createPreference = async ({ accessToken, voteId, rank, candidateId }) => {
+  try {
+    const response = await axios({
+      method: 'POST',
+      url: `${baseUrl}/create-preference/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        vote_id: voteId,
+        rank, 
+        candidate_id: candidateId
+      }
+    });
+    console.log('Preferences created: ', response.data);
+    return response.data;
+  } catch (error) {
+    console.log('Create preference error: ', error);
+    throw error;
+  }
+};
+
+
+export const closeEnrollment = async ({ accessToken, voteId }) => {
+  try {
+    const response = await axios({
+      method: 'POST',
+      url: `${baseUrl}/close-enrollment/${voteId}/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Close enrollment error: ', error);
+    throw error;
+  }
+};
+
+export const togglePolls = async ({ accessToken, voteId }) => {
+  try {
+    const response = await axios({
+      method: 'POST',
+      url: `${baseUrl}/toggle-polls/${voteId}/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Toggle polls error: ', error);
+    throw error;
+  }
+};
+
+
+export const getMyVotes = async ({ accessToken }) => {
+  try {
+    const response = await axios({
+      method: 'GET',
+      url: `${baseUrl}/my-votes/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Get my votes error: ', error);
+    throw error;
+  }
+};
+
+
+export const deleteVote = async ({ accessToken, voteId }) => {
+  try {
+    const response = await axios({
+      method: 'DELETE',
+      url: `${baseUrl}/delete-vote/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        vote_id: voteId,
+      }
+    });
+    console.log('Vote deleted: ', response.data);
+    return response.data;
+  } catch (error) {
+    console.log('Delete vote error: ', error);
+    throw error;
+  }
+};

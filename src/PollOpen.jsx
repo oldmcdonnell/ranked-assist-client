@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { fetchCandidates, updateVote } from "./api";
+import { fetchCandidates, createPreference } from "./api";
 import { AuthContext } from "./context";
 
 function PollOpen() {
@@ -23,6 +23,10 @@ function PollOpen() {
           type: 'SET_CANDIDATES',
           candidates: candidatesData,
         });
+        dispatch({
+          type: 'SET_VOTE_ID',
+          voteId: voteId,
+        });
       } catch (error) {
         setError(error.response ? error.response.data : error.message);
       }
@@ -32,35 +36,35 @@ function PollOpen() {
   }, [state.accessToken, voteId, dispatch]);
 
   const handleVoteChange = (candidateId, rank) => {
-    if (Object.values(userVote).includes(rank)) {
-      const updatedVote = { ...userVote };
-      for (const key in updatedVote) {
-        if (updatedVote[key] === rank) {
-          delete updatedVote[key];
-          break;
-        }
-      }
-      setUserVote({ ...updatedVote, [candidateId]: rank });
-    } else {
+    if (rank === "" || (rank > 0 && rank <= candidates.length && !Object.values(userVote).includes(rank))) {
       setUserVote({ ...userVote, [candidateId]: rank });
+    } else {
+      const updatedVote = { ...userVote };
+      delete updatedVote[candidateId];
+      setUserVote(updatedVote);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await updateVote({
+      console.log("User vote submitted:", userVote);
+
+      const rank = Object.keys(userVote).map(candidateId => ({
+        candidate_id: candidateId,
+        rank: userVote[candidateId],
+      }));
+
+      console.log('rank', rank)
+
+      await createPreference({
         accessToken: state.accessToken,
         voteId,
-        candidates: Object.keys(userVote).map(candidateId => ({
-          id: candidateId,
-          count: userVote[candidateId],
-        })),
-        round: 1, // Example round value
-        count: Object.keys(userVote).length, // Example count value
-        dispatch,
+        rank,
+        // candidateId: rank.candidateId,
       });
-      console.log("User vote submitted:", userVote);
+
+      console.log("User rank submitted:", rank);
     } catch (error) {
       setError(error.response ? error.response.data : error.message);
     }
@@ -91,7 +95,7 @@ function PollOpen() {
                     min="1"
                     max={candidates.length}
                     value={userVote[candidate.id] || ""}
-                    onChange={(e) => handleVoteChange(candidate.id, parseInt(e.target.value, 10))}
+                    onChange={(e) => handleVoteChange(candidate.id, e.target.value ? parseInt(e.target.value, 10) : "")}
                   />
                 </td>
               </tr>
