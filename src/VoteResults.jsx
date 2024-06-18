@@ -8,7 +8,8 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Lege
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 function VoteResults() {
-  var voteId = 4;
+//   const { voteId } = useParams();
+    var voteId = 4
   const { state } = useContext(AuthContext);
   const [results, setResults] = useState(null);
   const [error, setError] = useState(null);
@@ -38,15 +39,18 @@ function VoteResults() {
     return <div>Loading...</div>;
   }
 
+  const rounds = results.vote_counts;
+  const labels = rounds.length > 0 ? Object.keys(rounds[0]) : [];
+
+  const datasets = rounds.map((round, index) => ({
+    label: `Round ${index + 1}`,
+    data: labels.map(label => round[label] || 0),
+    backgroundColor: `rgba(${75 + (index * 30)}, ${192 - (index * 30)}, 192, 0.6)`,
+  }));
+
   const data = {
-    labels: results.candidates.map(candidate => candidate.description),
-    datasets: [
-      {
-        label: "Votes",
-        data: results.candidates.map(candidate => candidate.vote_count),
-        backgroundColor: "rgba(75, 192, 192, 0.6)",
-      },
-    ],
+    labels,
+    datasets,
   };
 
   return (
@@ -57,7 +61,7 @@ function VoteResults() {
         <div>
           <h3>Winner: {results.winner}</h3>
           <p>Winning Round: {results.round}</p>
-          <p>Total Votes: {results.votes}</p>
+          <p>Total Votes: {results.final_votes[results.winner]}</p>
         </div>
       ) : (
         <div>
@@ -68,4 +72,5 @@ function VoteResults() {
     </div>
   );
 }
+
 export default VoteResults;

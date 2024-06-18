@@ -1,10 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { fetchCandidates, updateVote } from "./api";
+import { fetchCandidates, createPreference } from "./api";
 import { AuthContext } from "./context";
 
 function PollOpen() {
-  // const { voteId } = useParams();
+  // const { voteId } = useParams(); // This should be used instead of hardcoding voteId
   var voteId = 4
   const { state, dispatch } = useContext(AuthContext);
   const [error, setError] = useState(null);
@@ -50,20 +50,22 @@ function PollOpen() {
     e.preventDefault();
     try {
       console.log("User vote submitted:", userVote);
-      console.log("Dispatch function:", dispatch);
 
-      await updateVote({
+      const rank = Object.keys(userVote).map(candidateId => ({
+        candidate_id: candidateId,
+        rank: userVote[candidateId],
+      }));
+
+      console.log('rank', rank)
+
+      await createPreference({
         accessToken: state.accessToken,
         voteId,
-        candidates: Object.keys(userVote).map(candidateId => ({
-          id: candidateId,
-          count: userVote[candidateId],
-        })),
-        round: 1, // Example round value
-        count: Object.keys(userVote).length, // Example count value
-        dispatch,
+        rank,
+        // candidateId: rank.candidateId,
       });
-      console.log("User vote submitted:", userVote);
+
+      console.log("User rank submitted:", rank);
     } catch (error) {
       setError(error.response ? error.response.data : error.message);
     }

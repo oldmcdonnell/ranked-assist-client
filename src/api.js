@@ -288,6 +288,8 @@ export const createCandidate = async ({ accessToken, voteId, description }) => {
   }
 };
 
+
+
 export const fetchVoteResults = async ({ accessToken, voteId }) => {
   try {
     const response = await axios({
@@ -304,6 +306,30 @@ export const fetchVoteResults = async ({ accessToken, voteId }) => {
     return response.data;
   } catch (error) {
     console.log('Fetch vote results error: ', error);
+    throw error;
+  }
+};
+
+
+
+export const createPreference = async ({ accessToken, voteId, rank, candidateId }) => {
+  try {
+    const response = await axios({
+      method: 'POST',
+      url: `${baseUrl}/create-preference/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        vote_id: voteId,
+        rank, 
+        candidate_id: candidateId
+      }
+    });
+    console.log('Preferences created: ', response.data);
+    return response.data;
+  } catch (error) {
+    console.log('Create preference error: ', error);
     throw error;
   }
 };
