@@ -298,7 +298,7 @@ export const fetchVoteResults = async ({ accessToken, voteId }) => {
       },
       data: {
         vote_id: voteId,
-      },
+      }
     });
     console.log('Vote results: ', response.data);
     return response.data;

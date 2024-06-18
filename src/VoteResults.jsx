@@ -3,26 +3,12 @@ import { useParams } from "react-router-dom";
 import { fetchVoteResults } from "./api";
 import { AuthContext } from "./context";
 import { Bar } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from "chart.js";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 function VoteResults() {
-  // const { voteId } = useParams();
-  var voteId = 4; // Temporary for assessing
+  var voteId = 4;
   const { state } = useContext(AuthContext);
   const [results, setResults] = useState(null);
   const [error, setError] = useState(null);
@@ -52,17 +38,13 @@ function VoteResults() {
     return <div>Loading...</div>;
   }
 
-  // Preparing data for the chart
-  const labels = results.candidates.map(candidate => candidate.description);
   const data = {
-    labels: labels,
+    labels: results.candidates.map(candidate => candidate.description),
     datasets: [
       {
-        label: 'Votes per Round',
+        label: "Votes",
         data: results.candidates.map(candidate => candidate.vote_count),
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-        borderWidth: 1,
+        backgroundColor: "rgba(75, 192, 192, 0.6)",
       },
     ],
   };
@@ -86,5 +68,4 @@ function VoteResults() {
     </div>
   );
 }
-
 export default VoteResults;
