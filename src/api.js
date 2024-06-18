@@ -267,8 +267,6 @@ export const updateVote = async ({ accessToken, voteId, candidate, count, round,
   }
 };
 
-
-
 export const createCandidate = async ({ accessToken, voteId, description }) => {
   console.log('create candidate vote ID ', voteId, accessToken);
   try {
