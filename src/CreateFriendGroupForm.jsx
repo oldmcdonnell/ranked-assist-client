@@ -79,12 +79,12 @@ export default function CreateFriendGroupForm() {
               key={index}
               onClick={() => handleProfileClick(profile)}
             >
-              @{profile.user.username} - {profile.first_name} {profile.last_name} ({profile.user.email})
+              @{profile.user.username} - {profile.user.first_name} {profile.user.last_name} ({profile.user.email})
             </div>
           ))}
         </div>
         <div>
-          <h3>Selected Profiles:</h3>
+          <h3>Selected Users:</h3>
           <ul>
             {selectedProfiles.map(profile => (
               <li key={profile.id}>

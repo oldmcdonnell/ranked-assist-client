@@ -82,9 +82,9 @@ function CreateVote() {
               <Form.Control as="textarea" rows={3} value={details} onChange={(e) => setDetails(e.target.value)} />
             </Form.Group>
             <Form.Group controlId="friendsGroup">
-              <Form.Label>Friends Group</Form.Label>
+              <Form.Label>Polling Group</Form.Label>
               <Form.Control as="select" value={friendsGroup} onChange={(e) => setFriendsGroup(e.target.value)} required>
-                <option value="">Select a Friends Group</option>
+                <option value="">Select a Polling Group</option>
                 {friendsGroups.map(group => (
                   <option key={group.id} value={group.id}>{group.title}</option>
                 ))}
