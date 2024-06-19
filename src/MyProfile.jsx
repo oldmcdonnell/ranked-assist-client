@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "./context";
 import { getMyVotes, closeEnrollment, togglePolls, deleteVote } from "./api";
-import CreateVote from "./CreateVote";
 import MyFriendGroups from "./MyFriendGroups";
 import { Link } from "react-router-dom";
 
