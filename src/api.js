@@ -188,7 +188,7 @@ export const getAllProfiles = async ({ accessToken, dispatch }) => {
   try {
     const response = await axios({
       method: 'get',
-      url: `${baseUrl}/get-profiles/`,
+      url: `${baseUrl}/fetch-profiles/`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

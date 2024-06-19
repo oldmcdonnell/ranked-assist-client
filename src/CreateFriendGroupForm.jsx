@@ -25,7 +25,7 @@ export default function CreateFriendGroupForm() {
   }, [authState.accessToken, profileDispatch]);
 
   const filteredProfiles = profileState.profiles.filter((profile) => {
-    const searchString = `${profile.user.username} ${profile.first_name} ${profile.last_name} ${profile.user.email}`.toLowerCase();
+    const searchString = `${profile.username} ${profile.first_name} ${profile.last_name} ${profile.email}`.toLowerCase();
     return searchString.includes(filter.toLowerCase());
   });
 
@@ -79,7 +79,7 @@ export default function CreateFriendGroupForm() {
               key={index}
               onClick={() => handleProfileClick(profile)}
             >
-              @{profile.user.username} - {profile.first_name} {profile.last_name} ({profile.user.email})
+              @{profile.username} - {profile.first_name} {profile.last_name} ({profile.email})
             </div>
           ))}
         </div>
@@ -88,7 +88,7 @@ export default function CreateFriendGroupForm() {
           <ul>
             {selectedProfiles.map(profile => (
               <li key={profile.id}>
-                {profile.user.username}
+                {profile.username}
               </li>
             ))}
           </ul>
