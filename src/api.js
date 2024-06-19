@@ -108,7 +108,6 @@ export const createFriendGroup = async ({ accessToken, dispatch, users, title, n
       },
     });
     console.log('CREATE FRIEND GROUP: ', response);
-    // Dispatch an action if needed
     dispatch({ type: 'ADD_FRIEND_GROUP', friendGroup: response.data });
   } catch (error) {
     console.log('ERROR: ', error);
@@ -185,9 +184,7 @@ export const createVote = async ({ dispatch, title, details, accessToken, friend
 
 
 
-
-
-export const getAllProfiles = async (dispatch, accessToken) => {
+export const getAllProfiles = async ({ accessToken, dispatch }) => {
   try {
     const response = await axios({
       method: 'get',
@@ -198,18 +195,18 @@ export const getAllProfiles = async (dispatch, accessToken) => {
     });
     console.log('PROFILES: ', response);
     dispatch({
-      type: 'SET_USERS',
-      profile: response.data,
+      type: 'SET_PROFILES',
+      profiles: response.data, 
     });
     return response.data;
   } catch (error) {
     console.log('Error with fetchUser api call: ', error);
     dispatch({
-      type: 'SET_ACCESS_TOKEN',
-      accessToken: undefined,
+      type: 'SET_PROFILES',
+      profiles: [], // Reset profiles in case of an error
     });
   }
-}
+};
 
 
 
