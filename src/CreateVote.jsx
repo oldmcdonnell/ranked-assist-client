@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { AuthContext } from './context';
-import { getFriendsGroups, createVote, createCandidate } from './api'; // Import your API functions
+import { getMyGroups, createVote, createCandidate } from './api'; // Import your API functions
 
 function CreateVote() {
   const { state, dispatch } = useContext(AuthContext);
@@ -15,7 +15,7 @@ function CreateVote() {
   useEffect(() => {
     const fetchFriendsGroups = async () => {
       try {
-        const groups = await getFriendsGroups(state.accessToken);
+        const groups = await getMyGroups({dispatch, accessToken: state.accessToken});
         setFriendsGroups(groups);
       } catch (error) {
         setError(error.response ? error.response.data : error.message);
@@ -23,7 +23,7 @@ function CreateVote() {
     };
 
     fetchFriendsGroups();
-  }, [state.accessToken]);
+  }, [state.accessToken, dispatch]);
 
   const handleAddCandidate = () => {
     setCandidates([...candidates, { description: '' }]);

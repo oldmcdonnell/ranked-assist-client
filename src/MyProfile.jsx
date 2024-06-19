@@ -3,6 +3,7 @@ import { AuthContext } from "./context";
 import { getMyVotes, closeEnrollment, togglePolls, deleteVote } from "./api";
 import CreateVote from "./CreateVote";
 import MyFriendGroups from "./MyFriendGroups";
+import { Link } from "react-router-dom";
 
 function MyProfile() {
   const { state } = useContext(AuthContext);
@@ -57,7 +58,7 @@ function MyProfile() {
   return (
     <>
       <MyFriendGroups />
-      <CreateVote />
+      <Link className="text-black-50 px-3 navBar" to="/CreateVote">Create a New vote</Link>
       <div>
         <h2>My Votes</h2>
         <button onClick={toggleOptions}>

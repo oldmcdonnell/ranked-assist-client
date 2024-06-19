@@ -9,10 +9,9 @@ function App() {
   return (
     <div className="p-5">
       <UserList />
-      <CreateFriendGroupForm />
       <CreateCandidate />
-      <PollOpen />
-      <VoteResults />
+      {/* <PollOpen />
+      <VoteResults /> */}
 
     </div>
   )

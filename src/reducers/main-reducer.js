@@ -3,6 +3,7 @@ const JSONStorage = JSON.parse(localStorage.getItem('STATE'));
 export const initialMainState = JSONStorage ?? {
   accessToken: '',
   profile: {},
+  profiles: [],
   friendGroups: [],
   users: [],
   profileImSeeing: [],
@@ -42,6 +43,15 @@ export const mainReducer = (state, action) => {
         ...state,
         profile: action.profile,
       };
+      case 'SET_PROFILES':
+        localStorage.setItem(
+          'STATE',
+          JSON.stringify({ ...state, profiles: action.profiles })
+        );
+        return {
+          ...state,
+          profiles: action.profiles,
+        };
     case 'ADD_FRIEND_GROUP':
       const updatedFriendGroups = [...state.friendGroups, action.friendGroup];
       localStorage.setItem(
@@ -116,6 +126,7 @@ export const mainReducer = (state, action) => {
       return {
         accessToken: '',
         profile: {},
+        profiles: [],
         friendGroups: [],
         users: [],
         groups: [],
