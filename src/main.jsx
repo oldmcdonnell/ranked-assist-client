@@ -24,7 +24,7 @@ import MyProfile from './MyProfile'
 import OpenEnrollment from './OpenEnrollment'
 import VoteResults from './VoteResults'
 import PollOpen from './PollOpen'
-
+import CreateFriendGroupForm from './CreateFriendGroupForm'
 
 const Protected = ({ component }) => {
   const { state } = useContext(AuthContext);
@@ -80,15 +80,19 @@ const router = createBrowserRouter([
       {
         path: '/openenrollment/:voteId', // This route correctly uses the URL parameter
         element: <Protected component={<OpenEnrollment />} /> 
-      },,
+      },
       {
         path: '/pollopen/:voteId', // This route correctly uses the URL parameter
         element: <Protected component={<PollOpen />} /> 
-      },,
+      },
       {
         path: '/voteresults/:voteId', // This route correctly uses the URL parameter
         element: <Protected component={<VoteResults />} /> 
-      },,
+      },
+      {
+        path: '/createfriendgroupform',
+        element: <Protected component={<CreateFriendGroupForm />} /> 
+      },
     ]
   }
 ])

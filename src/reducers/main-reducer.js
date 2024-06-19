@@ -1,8 +1,11 @@
 const JSONStorage = JSON.parse(localStorage.getItem('STATE'));
 
+//making a save to commit to main
+
 export const initialMainState = JSONStorage ?? {
   accessToken: '',
   profile: {},
+  profiles: [],
   friendGroups: [],
   users: [],
   profileImSeeing: [],
@@ -13,109 +16,79 @@ export const initialMainState = JSONStorage ?? {
   candidates: [],
 };
 
+const saveStateToLocalStorage = (state) => {
+  localStorage.setItem('STATE', JSON.stringify(state));
+};
+
 export const mainReducer = (state, action) => {
+  let newState;
+
   switch (action.type) {
     case 'SET_ACCESS_TOKEN':
-      localStorage.setItem(
-        'STATE',
-        JSON.stringify({ ...state, accessToken: action.accessToken })
-      );
-      return {
-        ...state,
-        accessToken: action.accessToken,
-      };
+      newState = { ...state, accessToken: action.accessToken };
+      saveStateToLocalStorage(newState);
+      return newState;
+      
     case 'SET_VOTE_ID':
-      localStorage.setItem(
-        'STATE',
-        JSON.stringify({ ...state, voteId: action.voteId })
-      );
-      return {
-        ...state,
-        voteId: action.voteId,
-      };
+      newState = { ...state, voteId: action.voteId };
+      saveStateToLocalStorage(newState);
+      return newState;
+
     case 'SET_PROFILE':
-      localStorage.setItem(
-        'STATE',
-        JSON.stringify({ ...state, profile: action.profile })
-      );
-      return {
-        ...state,
-        profile: action.profile,
-      };
+      newState = { ...state, profile: action.profile };
+      saveStateToLocalStorage(newState);
+      return newState;
+
+    case 'SET_PROFILES':
+      newState = { ...state, profiles: action.profiles };
+      saveStateToLocalStorage(newState);
+      return newState;
+
     case 'ADD_FRIEND_GROUP':
-      const updatedFriendGroups = [...state.friendGroups, action.friendGroup];
-      localStorage.setItem(
-        'STATE',
-        JSON.stringify({ ...state, friendGroups: updatedFriendGroups })
-      );
-      return {
-        ...state,
-        friendGroups: updatedFriendGroups,
-      };
+      newState = { ...state, friendGroups: [...state.friendGroups, action.friendGroup] };
+      saveStateToLocalStorage(newState);
+      return newState;
+
     case 'SET_COUNT':
-      localStorage.setItem(
-        'STATE',
-        JSON.stringify({ ...state, count: action.count })
-      );
-      return {
-        ...state,
-        count: action.count,
-      };
+      newState = { ...state, count: action.count };
+      saveStateToLocalStorage(newState);
+      return newState;
+
     case 'SET_USERS':
-      localStorage.setItem(
-        'STATE',
-        JSON.stringify({ ...state, users: action.users })
-      );
-      return {
-        ...state,
-        users: action.users,
-      };
+      newState = { ...state, users: action.users };
+      saveStateToLocalStorage(newState);
+      return newState;
+
     case 'SET_GROUPS':
-      localStorage.setItem(
-        'STATE',
-        JSON.stringify({ ...state, groups: action.groups })
-      );
-      return {
-        ...state,
-        groups: action.groups,
-      };
+      newState = { ...state, groups: action.groups };
+      saveStateToLocalStorage(newState);
+      return newState;
+
     case 'ADD_VOTE':
-      const updatedVotes = [...state.votes, action.vote];
-      localStorage.setItem(
-        'STATE',
-        JSON.stringify({ ...state, votes: updatedVotes })
-      );
-      return {
-        ...state,
-        votes: updatedVotes,
-      };
+      newState = { ...state, votes: [...state.votes, action.vote] };
+      saveStateToLocalStorage(newState);
+      return newState;
+
     case 'UPDATE_VOTE':
-      const updatedVoteList = state.votes.map(vote =>
-        vote.id === action.vote.id ? action.vote : vote
-      );
-      localStorage.setItem(
-        'STATE',
-        JSON.stringify({ ...state, votes: updatedVoteList })
-      );
-      return {
+      newState = {
         ...state,
-        votes: updatedVoteList,
+        votes: state.votes.map(vote => vote.id === action.vote.id ? action.vote : vote),
         candidates: action.candidates,
       };
+      saveStateToLocalStorage(newState);
+      return newState;
+
     case 'SET_CANDIDATES':
-      localStorage.setItem(
-        'STATE',
-        JSON.stringify({ ...state, candidates: action.candidates })
-      );
-      return {
-        ...state,
-        candidates: action.candidates,
-      };
+      newState = { ...state, candidates: action.candidates };
+      saveStateToLocalStorage(newState);
+      return newState;
+
     case 'LOGOUT':
       localStorage.removeItem('STATE');
       return {
         accessToken: '',
         profile: {},
+        profiles: [],
         friendGroups: [],
         users: [],
         groups: [],
@@ -124,6 +97,7 @@ export const mainReducer = (state, action) => {
         count: [],
         candidates: [],
       };
+
     default:
       return state;
   }

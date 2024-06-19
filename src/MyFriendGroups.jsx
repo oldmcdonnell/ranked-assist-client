@@ -26,29 +26,41 @@ function MyFriendGroups() {
     return <div>Error: {error}</div>;
   }
 
+  
   return (
-    <>
-      {groups.map((group) => (
+    <div>
+      <h2>My Friend Groups</h2>
+      {groups.map(group => (
         <div key={group.id}>
-          <h4>{group.title}</h4>
-          {group.votes && group.votes.filter(vote => vote.polls_open).map((vote) => (
-            <div key={vote.id}>
-              <h5>{vote.title}</h5>
-              <p>{vote.details}</p>
-              <p>Round: {vote.round}</p>
-              <p>Polls close: {vote.polls_close}</p>
-              <Link 
-                className="text-black-50 px-3 navBar" 
-                to={{
-                  pathname: `/openenrollment/${vote.id}`,
-                  state: { voteId: vote.id }
-                }}
-              >Go to the Vote</Link>
-            </div>
-          ))}
+          <h3>{group.title}</h3>
+          {group.votes && group.votes.map(vote => {
+            let linkTo = '';
+            let linkText = 'Go to Vote';
+            
+            if (vote.open_enrollment) {
+              linkTo = `/openenrollment/${vote.id}`;
+              linkText = 'Go to Open Enrollment';
+            } else if (vote.polls_open) {
+              linkTo = `/pollopen/${vote.id}`;
+              linkText = 'Go to Poll';
+            } else {
+              linkTo = `/voteresults/${vote.id}`;
+              linkText = 'View Results';
+            }
+            
+            return (
+              <div key={vote.id}>
+                <h4>{vote.title}</h4>
+                <p>{vote.details}</p>
+                <Link
+                className="text-black-50 px-3 navBar"
+                to={linkTo}>{linkText}</Link>
+              </div>
+            );
+          })}
         </div>
       ))}
-    </>
+    </div>
   );
 }
 
