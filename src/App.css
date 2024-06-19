@@ -1,31 +1,131 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
 html {
   height: 100%;
 }
+
 body {
   height: 100%;
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
 }
+
 #root {
   display: flex;
   height: 100%;
   flex-direction: column;
   justify-content: space-between;
 }
+
 #page-content {
   flex-grow: 2;
+  padding: 20px;
 }
 
-
-
+/* Buttons */
 button, .button {
-  border-color: black;
-  border-width: 2px;
-  border-radius: 30%;
-}
-.navBar{
-  text-decoration: none;
-  font: Arial;
-  color: rgb(11, 7, 40);
-  font-size: large;
-  /* z-index: 1000; */
+  border: 2px solid #333;
+  border-radius: 5px;
+  padding: 10px 20px;
+  background-color: #fff;
+  color: #333;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
+button:hover, .button:hover {
+  background-color: #333;
+  color: #fff;
+}
+
+/* Navbar */
+.navBar {
+  text-decoration: none;
+  font-family: 'Roboto', sans-serif;
+  color: #0b0728;
+  font-size: 1.1em;
+  padding: 10px 15px;
+  transition: all 0.3s ease;
+}
+
+.navBar:hover {
+  color: #f4f4f9;
+  background-color: #0b0728;
+  border-radius: 5px;
+}
+
+/* General Layout */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+  color: #0b0728;
+}
+
+/* Forms */
+input[type="text"], input[type="email"], input[type="password"], textarea, select {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, textarea:focus, select:focus {
+  border-color: #0b0728;
+  outline: none;
+}
+
+/* Links */
+a {
+  color: #0b0728;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #f4f4f9;
+  background-color: #0b0728;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+table, th, td {
+  border: 1px solid #ccc;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #0b0728;
+  color: #f4f4f9;
+}
+
+/* Flexbox Utilities */
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.flex-center {
+  justify-content: center;
+  align-items: center;
+}
