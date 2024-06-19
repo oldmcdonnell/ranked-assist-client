@@ -1,5 +1,7 @@
 const JSONStorage = JSON.parse(localStorage.getItem('STATE'));
 
+//making a save to commit to main
+
 export const initialMainState = JSONStorage ?? {
   accessToken: '',
   profile: {},
