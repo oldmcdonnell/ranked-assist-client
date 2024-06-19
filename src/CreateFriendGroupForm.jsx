@@ -1,102 +1,97 @@
-import React, { useState, useContext, useEffect } from "react";
-import { getAllProfiles, createFriendGroup } from "./api";
-import { AuthContext, ProfileContext } from "./context";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useEffect, useState } from 'react';
+import { getAllProfiles, createFriendGroup } from './api';
+import { ProfileContext, AuthContext } from './context';
+import { useNavigate } from 'react-router-dom';
 
 export default function CreateFriendGroupForm() {
-  const { state, dispatch } = useContext(AuthContext);
-  const { profile } = useContext(ProfileContext);
-  const [users, setUsers] = useState([]);
-  const [selectedUsers, setSelectedUsers] = useState([]);
-  const [note, setNote] = useState('');
+  const { state: profileState, dispatch: profileDispatch } = useContext(ProfileContext);
+  const { state: authState } = useContext(AuthContext);
   const [filter, setFilter] = useState('');
-  const [error, setError] = useState(null);
+  const [groupName, setGroupName] = useState('');
+  const [note, setNote] = useState('');
+  const [selectedProfiles, setSelectedProfiles] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchProfiles = async () => {
       try {
-        const profiles = await getAllProfiles({ accessToken: state.accessToken });
-        setUsers(profiles);
+        let profiles = await getAllProfiles({ accessToken: authState.accessToken, dispatch: profileDispatch });
+        setProfiles(profiles);
       } catch (error) {
-        setError(error.response ? error.response.data : error.message);
+        console.log(error);
       }
     };
+    fetchProfiles();
+  }, [authState.accessToken, profileDispatch]);
 
-    fetchUsers();
-  }, [state.accessToken]);
+  const filteredProfiles = profileState.profiles.filter((profile) => {
+    const searchString = `${profile.username} ${profile.first_name} ${profile.last_name} ${profile.email}`.toLowerCase();
+    return searchString.includes(filter.toLowerCase());
+  });
 
-  const handleUserSelection = (userId) => {
-    setSelectedUsers((prevSelectedUsers) =>
-      prevSelectedUsers.includes(userId)
-        ? prevSelectedUsers.filter((id) => id !== userId)
-        : [...prevSelectedUsers, userId]
-    );
+  const handleProfileClick = (profile) => {
+    if (!selectedProfiles.includes(profile)) {
+      setSelectedProfiles([...selectedProfiles, profile]);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await createFriendGroup({
-        accessToken: state.accessToken,
-        users: selectedUsers,
+        accessToken: authState.accessToken,
+        dispatch: profileDispatch,
+        users: selectedProfiles.map(profile => profile.id),
+        title: groupName,
         note,
       });
-      // Clear the form after successful submission
-      setSelectedUsers([]);
-      setNote('');
+      navigate('/myprofile');
     } catch (error) {
-      setError(error.response ? error.response.data : error.message);
+      console.log(error);
     }
   };
 
-  const filteredUsers = users.filter((user) => {
-    return (
-      user.first_name.toLowerCase().includes(filter.toLowerCase()) ||
-      user.username.toLowerCase().includes(filter.toLowerCase()) ||
-      user.last_name.toLowerCase().includes(filter.toLowerCase())
-    );
-  });
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
   return (
     <div>
-      <h1>Create Friend Group</h1>
+      <h2>Create Friend Group</h2>
       <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Group Name"
+          value={groupName}
+          onChange={(e) => setGroupName(e.target.value)}
+          required
+        />
+        <textarea
+          placeholder="Note"
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Search profiles"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        />
         <div>
-          <label>Note:</label>
-          <input
-            type="text"
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            required
-          />
+          {filter && filteredProfiles.slice(0, 5).map((profile, index) => (
+            <div
+              key={index}
+              onClick={() => handleProfileClick(profile)}
+            >
+              @{profile.username} - {profile.first_name} {profile.last_name} ({profile.email})
+            </div>
+          ))}
         </div>
         <div>
-          <label>Search Users:</label>
-          <input
-            type="text"
-            placeholder="Search profiles"
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-          />
-          {filter &&
-            filteredUsers.slice(0, 5).map((user) => (
-              <div key={user.id}>
-                <label>
-                  <input
-                    type="checkbox"
-                    value={user.id}
-                    checked={selectedUsers.includes(user.id)}
-                    onChange={() => handleUserSelection(user.id)}
-                  />
-                  @{user.username} - {user.first_name} {user.last_name}
-                </label>
-              </div>
+          <h3>Selected Profiles:</h3>
+          <ul>
+            {selectedProfiles.map(profile => (
+              <li key={profile.id}>
+                {profile.username}
+              </li>
             ))}
+          </ul>
         </div>
         <button type="submit">Create Group</button>
       </form>

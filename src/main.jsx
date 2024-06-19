@@ -16,7 +16,7 @@ import ErrorPage from './ErrorPage'
 import Header from './Header'
 import Footer from './Footer'
 import Login from './Login'
-import { AuthContext } from './context'
+import { AuthContext, ProfileContext } from './context'
 import CreateNewUser from './CreateNewUser'
 import { initialMainState, mainReducer } from './reducers/main-reducer';
 import CreateVote from './CreateVote'
@@ -112,8 +112,21 @@ const AuthContextProvider = ({ children }) => {
   );
 };
 
+
+const ProfileProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(mainReducer, initialMainState);
+
+  return (
+    <ProfileContext.Provider value={{ state, dispatch }}>
+      {children}
+    </ProfileContext.Provider>
+  );
+};
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <AuthContextProvider>
-    <RouterProvider router={router} />
+    <ProfileProvider>
+      <RouterProvider router={router} />
+    </ProfileProvider>
   </AuthContextProvider>
-)
+);
