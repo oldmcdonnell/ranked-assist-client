@@ -4,7 +4,7 @@ import { fetchCandidates, createPreference } from "./api";
 import { AuthContext } from "./context";
 
 function PollOpen() {
-  var voteId = 1
+  const { voteId } = useParams(); // This should be used instead of hardcoding voteId
   const { state, dispatch } = useContext(AuthContext);
   const [error, setError] = useState(null);
   const [candidates, setCandidates] = useState([]);
