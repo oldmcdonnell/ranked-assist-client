@@ -181,9 +181,6 @@ export const createVote = async ({ dispatch, title, details, accessToken, friend
   }
 };
 
-
-
-
 export const getAllProfiles = async ({ accessToken, dispatch }) => {
   try {
     const response = await axios({
