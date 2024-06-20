@@ -309,6 +309,28 @@ export const createCandidate = async ({ accessToken, voteId, description }) => {
   }
 };
 
+export const createOrUpdateCandidate = async ({ accessToken, voteId, candidateId, description }) => {
+  console.log('create/update candidate vote ID ', voteId, accessToken, candidateId);
+  try {
+    const response = await axios({
+      method: candidateId ? 'PUT' : 'POST',
+      url: candidateId ? `${baseUrl}/update-candidate/${candidateId}/` : `${baseUrl}/create-candidate/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        vote_id: voteId,
+        description,
+      }
+    });
+    console.log('candidates: ', response);
+    return response.data;
+  } catch (error) {
+    console.log('Create/update candidate error: ', error);
+    throw error;
+  }
+};
+
 
 
 export const fetchVoteResults = async ({ accessToken, voteId }) => {

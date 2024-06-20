@@ -1,11 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { createCandidate, fetchCandidates } from "./api";
+import { fetchCandidates, createOrUpdateCandidate } from "./api";
 import { AuthContext } from "./context";
 
-function OpenEnrollment({ voteId: propVoteId }) {
-  const { voteId: paramVoteId } = useParams();
-  const voteId = propVoteId || paramVoteId;
+function OpenEnrollment() {
+  const { voteId } = useParams();
   const { state } = useContext(AuthContext);
   const [candidates, setCandidates] = useState([]);
   const [error, setError] = useState(null);
@@ -13,11 +12,11 @@ function OpenEnrollment({ voteId: propVoteId }) {
   useEffect(() => {
     const fetchVoteData = async () => {
       try {
-        const candidatesData = await fetchCandidates({ 
-          accessToken: state.accessToken, 
-          voteId 
+        const candidatesData = await fetchCandidates({
+          accessToken: state.accessToken,
+          voteId,
         });
-        console.log('Fetched candidates:', candidatesData); // Log fetched candidates
+        console.log("Fetched candidates:", candidatesData);
         setCandidates(candidatesData || []);
       } catch (error) {
         setError(error.response ? error.response.data : error.message);
@@ -25,9 +24,6 @@ function OpenEnrollment({ voteId: propVoteId }) {
     };
 
     fetchVoteData();
-    const intervalFunc = setInterval(fetchVoteData, 1000000); // Fetch every so often
-
-    return () => clearInterval(intervalFunc);
   }, [state.accessToken, voteId]);
 
   const handleAddCandidate = () => {
@@ -44,15 +40,17 @@ function OpenEnrollment({ voteId: propVoteId }) {
     e.preventDefault();
     try {
       for (const candidate of candidates) {
-        if (!candidate.id) {
-          await createCandidate({
-            accessToken: state.accessToken,
-            voteId,
-            description: candidate.description,
-          });
-        }
+        await createOrUpdateCandidate({
+          accessToken: state.accessToken,
+          voteId,
+          candidateId: candidate.id,
+          description: candidate.description,
+        });
       }
-      const updatedCandidates = await fetchCandidates({ accessToken: state.accessToken, voteId });
+      const updatedCandidates = await fetchCandidates({
+        accessToken: state.accessToken,
+        voteId,
+      });
       setCandidates(updatedCandidates || []);
     } catch (error) {
       setError(error.response ? error.response.data : error.message);
@@ -67,15 +65,26 @@ function OpenEnrollment({ voteId: propVoteId }) {
     <div>
       <h2>Open Enrollment</h2>
       <form onSubmit={handleSubmit}>
-        {candidates.map((candidate, index) => (
-          <div key={index}>
-            <input
-              type="text"
-              value={candidate.description}
-              onChange={(e) => handleCandidateChange(index, e.target.value)}
-            />
-          </div>
-        ))}
+        <table>
+          <thead>
+            <tr>
+              <th>Candidate</th>
+            </tr>
+          </thead>
+          <tbody>
+            {candidates.map((candidate, index) => (
+              <tr key={candidate.id || index}>
+                <td>
+                  <input
+                    type="text"
+                    value={candidate.description}
+                    onChange={(e) => handleCandidateChange(index, e.target.value)}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
         <button type="button" onClick={handleAddCandidate}>
           Add Candidate
         </button>
