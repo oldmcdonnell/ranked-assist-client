@@ -3,8 +3,9 @@ import { useParams } from "react-router-dom";
 import { fetchCandidates, createPreference } from "./api";
 import { AuthContext } from "./context";
 
-function PollOpen() {
-  const { voteId } = useParams(); // This should be used instead of hardcoding voteId
+function PollOpen({voteId: propVoteId}) {
+  const { voteId: paramVoteId } = useParams();
+  const voteId = propVoteId || paramVoteId;
   const { state, dispatch } = useContext(AuthContext);
   const [error, setError] = useState(null);
   const [candidates, setCandidates] = useState([]);

@@ -7,8 +7,9 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Lege
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
-function VoteResults() {
-  const { voteId } = useParams();
+function VoteResults({voteId: propVoteId}) {
+  const { voteId: paramVoteId } = useParams();
+  const voteId = propVoteId || paramVoteId;
   const { state } = useContext(AuthContext);
   const [results, setResults] = useState(null);
   const [error, setError] = useState(null);

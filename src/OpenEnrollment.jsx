@@ -3,8 +3,10 @@ import { useParams } from "react-router-dom";
 import { createCandidate, fetchCandidates } from "./api";
 import { AuthContext } from "./context";
 
-function OpenEnrollment() {
-  const { voteId } = useParams();
+function OpenEnrollment({ voteId: propVoteId }) {
+  console.log('prop vote ID ', propVoteId)
+  const { voteId: paramVoteId } = useParams();
+  const voteId = propVoteId || paramVoteId;
   const { state } = useContext(AuthContext);
   const [candidates, setCandidates] = useState([]);
   const [error, setError] = useState(null);
