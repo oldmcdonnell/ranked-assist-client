@@ -231,6 +231,32 @@ export const getMyGroups = async ({dispatch, accessToken}) => {
   }
 }
 
+
+export const getAllUserGroup = async ({ dispatch, accessToken }) => {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: `${baseUrl}/all-user-group/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    console.log('Groups: ', response);
+    dispatch({
+      type: 'SET_GROUPS',
+      groups: response.data, // Corrected to match the state structure
+    });
+    return response.data;
+  } catch (error) {
+    console.log('Error getAllUserGroup: ', error);
+    dispatch({
+      type: 'SET_GROUPS',
+      groups: [], // Reset groups to an empty array in case of an error
+    });
+  }
+};
+
+
 export const updateVote = async ({ accessToken, voteId, candidate, count, round, dispatch }) => {
   console.log('API vote ID ', voteId, accessToken);
   try {
