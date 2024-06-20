@@ -4,7 +4,6 @@ import { createCandidate, fetchCandidates } from "./api";
 import { AuthContext } from "./context";
 
 function OpenEnrollment({ voteId: propVoteId }) {
-  console.log('prop vote ID ', propVoteId)
   const { voteId: paramVoteId } = useParams();
   const voteId = propVoteId || paramVoteId;
   const { state } = useContext(AuthContext);
@@ -14,7 +13,10 @@ function OpenEnrollment({ voteId: propVoteId }) {
   useEffect(() => {
     const fetchVoteData = async () => {
       try {
-        const candidatesData = await fetchCandidates({ accessToken: state.accessToken, voteId });
+        const candidatesData = await fetchCandidates({ 
+          accessToken: state.accessToken, 
+          voteId 
+        });
         console.log('Fetched candidates:', candidatesData); // Log fetched candidates
         setCandidates(candidatesData || []);
       } catch (error) {
