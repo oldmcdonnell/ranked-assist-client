@@ -11,7 +11,8 @@ function VoteResults({voteId: propVoteId}) {
   const { voteId: paramVoteId } = useParams();
   const voteId = propVoteId || paramVoteId;
   const { state } = useContext(AuthContext);
-  const [results, setResults] = useState(null);
+  const [results, setResults] = useState();
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -23,13 +24,20 @@ function VoteResults({voteId: propVoteId}) {
         });
         console.log("Fetched results:", resultsData);
         setResults(resultsData);
+
       } catch (error) {
         setError(error.response ? error.response.data : error.message);
+      } finally {
+        setLoading(false)
       }
     };
 
     fetchResults();
   }, [state.accessToken, voteId]);
+
+  if (loading) {
+    return <div>Loading…</div>
+  }
 
   if (error) {
     return <div>Error: {error}</div>;

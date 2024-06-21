@@ -1,7 +1,5 @@
 const JSONStorage = JSON.parse(localStorage.getItem('STATE'));
 
-//making a save to commit to main
-
 export const initialMainState = JSONStorage ?? {
   accessToken: '',
   profile: {},
@@ -14,6 +12,7 @@ export const initialMainState = JSONStorage ?? {
   voteId: '',
   count: [],
   candidates: [],
+  results: {}, // Add results to initial state
 };
 
 const saveStateToLocalStorage = (state) => {
@@ -83,6 +82,11 @@ export const mainReducer = (state, action) => {
       saveStateToLocalStorage(newState);
       return newState;
 
+    case 'SET_RESULTS':
+      newState = { ...state, results: action.results };
+      saveStateToLocalStorage(newState);
+      return newState;
+
     case 'LOGOUT':
       localStorage.removeItem('STATE');
       return {
@@ -96,6 +100,7 @@ export const mainReducer = (state, action) => {
         voteId: '',
         count: [],
         candidates: [],
+        results: {}, // Reset results on logout
       };
 
     default:

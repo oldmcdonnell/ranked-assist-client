@@ -28,7 +28,6 @@ import CreateFriendGroupForm from './CreateFriendGroupForm'
 
 const Protected = ({ component }) => {
   const { state } = useContext(AuthContext);
-  console.log('protected auth state ', state);
   return state?.accessToken ? (
     <>
       {component}
@@ -122,6 +121,9 @@ const ProfileProvider = ({ children }) => {
     </ProfileContext.Provider>
   );
 };
+
+
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <AuthContextProvider>

@@ -3,8 +3,9 @@ import { useParams } from "react-router-dom";
 import { fetchCandidates, createOrUpdateCandidate } from "./api";
 import { AuthContext } from "./context";
 
-function OpenEnrollment() {
-  const { voteId } = useParams();
+function OpenEnrollment({voteId: propVoteId}) {
+  const { voteId: paramVoteId } = useParams();
+  const voteId = propVoteId || paramVoteId;
   const { state } = useContext(AuthContext);
   const [candidates, setCandidates] = useState([]);
   const [error, setError] = useState(null);
@@ -15,7 +16,7 @@ function OpenEnrollment() {
         const candidatesData = await fetchCandidates({
           accessToken: state.accessToken,
           voteId,
-        });
+        }); 
         console.log("Fetched candidates:", candidatesData);
         setCandidates(candidatesData || []);
       } catch (error) {

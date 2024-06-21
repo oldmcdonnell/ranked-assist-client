@@ -40,7 +40,7 @@ function AllUserVotes() {
           <div key={vote.id}>
             <OpenEnrollment voteId={vote.id} />
             <PollOpen voteId={vote.id} />
-            <VoteResults voteId={vote.id} />
+            {/* <VoteResults voteId={vote.id} /> */}
           </div>
         ))}
       </div>

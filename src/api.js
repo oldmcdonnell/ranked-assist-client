@@ -126,33 +126,24 @@ export const getFriendsGroups = async (accessToken) => {
 
 
 
-export const fetchCandidates = async ({ accessToken, voteId, description}) => {
-  console.log('fetch canddates', voteId, accessToken)
+export const fetchCandidates = async ({ accessToken, voteId }) => {
   try {
+    console.log('fetch candidate data ', voteId)
     const response = await axios({
       method: 'POST',
       url: `${baseUrl}/fetch-candidates/`,
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        // headers: {'X-CSRFToken': csrftoken},
       },
       data:{
         vote_id: voteId,
-        description: description
-      }
+      },
     });
-    console.log('Candidate fetch: ', response);
-    // dispatch({
-    //   type: 'SET_PROFILE',
-    //   profile: response.data,
-    // });
+    console.log('Fetched candidates: ', response.data);
     return response.data;
   } catch (error) {
-    console.log('Error with fetchUser api call: ', error);
-    // dispatch({
-    //   type: 'SET_ACCESS_TOKEN',
-    //   accessToken: undefined,
-    // });
+    console.log('Error with fetchCandidates API call: ', error);
+    throw error;
   }
 };
 
@@ -241,7 +232,6 @@ export const getAllUserGroup = async ({ dispatch, accessToken }) => {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    console.log('Groups: ', response);
     dispatch({
       type: 'SET_GROUPS',
       groups: response.data, // Corrected to match the state structure
