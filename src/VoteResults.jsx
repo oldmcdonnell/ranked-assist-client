@@ -7,13 +7,15 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Lege
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
-function VoteResults({voteId: propVoteId}) {
+function VoteResults({ voteId: propVoteId }) {
   const { voteId: paramVoteId } = useParams();
   const voteId = propVoteId || paramVoteId;
   const { state } = useContext(AuthContext);
-  const [results, setResults] = useState();
+  const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [rounds, setRounds] = useState([]);
+  const [labels, setLabels] = useState([]);
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -24,31 +26,35 @@ function VoteResults({voteId: propVoteId}) {
         });
         console.log("Fetched results:", resultsData);
         setResults(resultsData);
-
       } catch (error) {
-        setError(error.response ? error.response.data : error.message);
+        console.log('BLAMMO: ERROR: ', error);
+        setError(error.response ? error.response.data.error : error.message);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
     };
 
     fetchResults();
   }, [state.accessToken, voteId]);
 
+  useEffect(() => {
+    if (results && results.vote_counts && results.vote_counts.length > 0) {
+      setRounds(results.vote_counts);
+      setLabels(Object.keys(results.vote_counts[0]));
+    }
+  }, [results]);
+
   if (loading) {
-    return <div>Loading…</div>
+    return <div>Loading…</div>;
   }
 
   if (error) {
     return <div>Error: {error}</div>;
   }
 
-  if (!results) {
-    return <div>Loading...</div>;
+  if (!results || rounds.length === 0) {
+    return <div>No results available.</div>;
   }
-
-  const rounds = results.vote_counts;
-  const labels = rounds.length > 0 ? Object.keys(rounds[0]) : [];
 
   const datasets = rounds.map((round, index) => ({
     label: `Round ${index + 1}`,

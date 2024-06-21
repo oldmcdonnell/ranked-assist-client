@@ -33,19 +33,19 @@ function AllUserVotes() {
     return <div>Loading...</div>;
   }
 
-  return (
+  return groups && groups.votes ? (
     <>
       <div>
         {groups.votes && groups.votes.map(vote => (
           <div key={vote.id}>
             <OpenEnrollment voteId={vote.id} />
             <PollOpen voteId={vote.id} />
-            {/* <VoteResults voteId={vote.id} /> */}
+            <VoteResults voteId={vote.id} />
           </div>
         ))}
       </div>
     </>
-  );
+  ) : null;
 }
 
 export default AllUserVotes;
