@@ -92,8 +92,8 @@ export const listUsers = async ({ accessToken, dispatch }) => {
   }
 };
 
-export const createFriendGroup = async ({ accessToken, dispatch, users, title, note }) => {
-  console.log('create friend group', accessToken);
+export const createFriendGroup = async ({ accessToken, dispatch, members, title, note }) => {
+  console.log('member group members ', members );
   try {
     const response = await axios({
       method: 'POST',
@@ -102,7 +102,7 @@ export const createFriendGroup = async ({ accessToken, dispatch, users, title, n
         Authorization: `Bearer ${accessToken}`,
       },
       data: {
-        users,
+        members,
         title,
         note,
       },
@@ -291,7 +291,7 @@ export const createCandidate = async ({ accessToken, voteId, description }) => {
   console.log('create candidate vote ID ', voteId, accessToken);
   try {
     const response = await axios({
-      method: 'PUT',
+      method: 'POST',
       url: `${baseUrl}/create-candidate/`,
       headers: {
         Authorization: `Bearer ${accessToken}`,

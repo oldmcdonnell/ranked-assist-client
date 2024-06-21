@@ -16,7 +16,7 @@ function MyNavbar() {
             <Link className="text-black-50 px-3 navBar" to="/">Home</Link>
             <Link className="text-black-50 px-3 navBar" to="/MyProfile">My Groups and Polls</Link>
             <Link className="text-black-50 px-3 navBar" to="/CreateFriendGroupForm">Create Polling Group</Link>
-            <Link className="text-black-50 px-3 navBar" to="/CreateVote">Create a New Vote</Link>
+            <Link className="text-black-50 px-3 navBar" to="/CreateVote">Create a New Poll</Link>
           </Nav>
         </Navbar.Collapse>
     </Container>

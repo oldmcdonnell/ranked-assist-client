@@ -15,8 +15,10 @@ export default function CreateFriendGroupForm() {
   useEffect(() => {
     const fetchProfiles = async () => {
       try {
-        let profiles = await getAllProfiles({ accessToken: authState.accessToken, dispatch: profileDispatch });
-        setProfiles(profiles);
+        // let profiles = await getAllProfiles({ accessToken: authState.accessToken, dispatch: profileDispatch });
+        // setProfiles(profiles);
+        const profiles = await getAllProfiles({ accessToken: authState.accessToken, dispatch: profileDispatch });
+        profileDispatch({ type: 'SET_PROFILES', profiles });
       } catch (error) {
         console.log(error);
       }
@@ -25,7 +27,7 @@ export default function CreateFriendGroupForm() {
   }, [authState.accessToken, profileDispatch]);
 
   const filteredProfiles = profileState.profiles.filter((profile) => {
-    const searchString = `${profile.user.username} ${profile.first_name} ${profile.last_name} ${profile.user.email}`.toLowerCase();
+    const searchString = `${profile.user.username} ${profile.user.first_name} ${profile.user.last_name} ${profile.user.email}`.toLowerCase();
     return searchString.includes(filter.toLowerCase());
   });
 
@@ -41,7 +43,7 @@ export default function CreateFriendGroupForm() {
       await createFriendGroup({
         accessToken: authState.accessToken,
         dispatch: profileDispatch,
-        users: selectedProfiles.map(profile => profile.id),
+        members: selectedProfiles.map(profile => profile.id),
         title: groupName,
         note,
       });
