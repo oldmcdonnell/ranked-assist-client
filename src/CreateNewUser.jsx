@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { createUser } from "./api"; // Assuming you have an API function to create users
 import { useNavigate } from "react-router-dom";
+import { Form, Button, Container } from 'react-bootstrap';
 
 function CreateNewUser() {
   const [username, setUsername] = useState('');
@@ -11,8 +12,9 @@ function CreateNewUser() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const submit = async () => {
-    console.log('Email: ', email)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log('Email: ', email);
     try {
       const response = await createUser({ username, password, firstName, lastName, email });
       if (response.success) {
@@ -32,54 +34,60 @@ function CreateNewUser() {
   };
 
   return (
-    <div className="p-5">
-      <h1>Create New User</h1>
-      {error && <div className="error">{error}</div>}
-      <div>
-        <div>Username:</div>
-        <input
-          onChange={(e) => setUsername(e.target.value)}
-          value={username}
-        />
+    <Container className="d-flex flex-column align-items-center p-5">
+      <div className="p-5 w-100" style={{ maxWidth: '400px' }}>
+        <h1>Create New User</h1>
+        {error && <div className="alert alert-danger">{error}</div>}
+        <Form onSubmit={handleSubmit}>
+          <Form.Group>
+            <Form.Label>Username</Form.Label>
+            <Form.Control
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>First Name</Form.Label>
+            <Form.Control
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Last Name</Form.Label>
+            <Form.Control
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Optional"
+            />
+          </Form.Group>
+          <Button className="mt-3" type="submit" variant="primary">Submit</Button>
+        </Form>
       </div>
-
-      <div>
-        <div>Password:</div>
-        <input
-          type="password"
-          onChange={(e) => setPassword(e.target.value)}
-          value={password}
-        />
-      </div>
-
-      <div>
-        <div>First Name:</div>
-        <input
-          onChange={(e) => setFirstName(e.target.value)}
-          value={firstName}
-        />
-      </div>
-
-      <div>
-        <div>Last Name:</div>
-        <input
-          onChange={(e) => setLastName(e.target.value)}
-          value={lastName}
-        />
-      </div>
-
-      <div>
-        <div>Email:</div>
-        <input
-          onChange={(e) => setEmail(e.target.value)}
-          value={email}
-        />
-      </div>
-
-      <div style={{ marginTop: 20 }}>
-        <button onClick={submit}>Submit</button>
-      </div>
-    </div>
+    </Container>
   );
 }
 
