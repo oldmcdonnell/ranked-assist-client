@@ -1,4 +1,3 @@
-// AllUserVotes.jsx
 import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "./context";
 import { getAllUserGroup } from "./api";
@@ -11,19 +10,24 @@ function AllUserVotes() {
   const [groups, setGroups] = useState(null);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchGroups = async () => {
-      try {
-        const data = await getAllUserGroup({ dispatch, accessToken: state.accessToken });
-        console.log('Fetched groups data:', data); // Debug log
-        setGroups(data);
-      } catch (error) {
-        setError(error.response ? error.response.data : error.message);
-      }
-    };
+  const fetchGroups = async () => {
+    try {
+      const data = await getAllUserGroup({ dispatch, accessToken: state.accessToken });
+      console.log('Fetched groups data:', data); // Debug log
+      dispatch({ type: 'SET_VOTES', votes: data.votes });
+      setGroups(data);
+    } catch (error) {
+      setError(error.response ? error.response.data : error.message);
+    }
+  };
 
+  useEffect(() => {
     fetchGroups();
   }, [state.accessToken, dispatch]);
+
+  const handleUpdate = () => {
+    fetchGroups();
+  };
 
   if (error) {
     return <div>Error: {error}</div>;
@@ -36,10 +40,10 @@ function AllUserVotes() {
   return groups && groups.votes ? (
     <>
       <div>
-        {groups.votes && groups.votes.map(vote => (
+        {groups.votes.map(vote => (
           <div key={vote.id}>
-            <OpenEnrollment voteId={vote.id} />
-            <PollOpen voteId={vote.id} />
+            <OpenEnrollment voteId={vote.id} onUpdate={handleUpdate} />
+            <PollOpen voteId={vote.id} onUpdate={handleUpdate} />
             <VoteResults voteId={vote.id} />
           </div>
         ))}

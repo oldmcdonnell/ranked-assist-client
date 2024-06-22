@@ -3,10 +3,10 @@ import { useParams } from "react-router-dom";
 import { fetchCandidates, createOrUpdateCandidate } from "./api";
 import { AuthContext } from "./context";
 
-function OpenEnrollment({voteId: propVoteId}) {
+function OpenEnrollment({ voteId: propVoteId, onUpdate }) {
   const { voteId: paramVoteId } = useParams();
   const voteId = propVoteId || paramVoteId;
-  const { state } = useContext(AuthContext);
+  const { state, dispatch } = useContext(AuthContext);
   const [candidates, setCandidates] = useState([]);
   const [error, setError] = useState(null);
 
@@ -16,16 +16,20 @@ function OpenEnrollment({voteId: propVoteId}) {
         const candidatesData = await fetchCandidates({
           accessToken: state.accessToken,
           voteId,
-        }); 
+        });
         console.log("Fetched candidates:", candidatesData);
         setCandidates(candidatesData || []);
+        dispatch({
+          type: 'SET_CANDIDATES',
+          candidates: candidatesData,
+        });
       } catch (error) {
         setError(error.response ? error.response.data : error.message);
       }
     };
 
     fetchVoteData();
-  }, [state.accessToken, voteId]);
+  }, [state.accessToken, voteId, dispatch]);
 
   const handleAddCandidate = () => {
     setCandidates([...candidates, { description: '' }]);
@@ -53,6 +57,8 @@ function OpenEnrollment({voteId: propVoteId}) {
         voteId,
       });
       setCandidates(updatedCandidates || []);
+      dispatch({ type: 'UPDATE_VOTE', vote: { id: voteId, candidates: updatedCandidates } });
+      onUpdate(); // Notify the parent component about the update
     } catch (error) {
       setError(error.response ? error.response.data : error.message);
     }

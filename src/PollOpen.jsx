@@ -3,11 +3,12 @@ import { useParams } from "react-router-dom";
 import { fetchCandidates, createPreference } from "./api";
 import { AuthContext } from "./context";
 
-function PollOpen({voteId: propVoteId}) {
+function PollOpen({ voteId: propVoteId }) {
   const { voteId: paramVoteId } = useParams();
   const voteId = propVoteId || paramVoteId;
   const { state, dispatch } = useContext(AuthContext);
   const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
   const [candidates, setCandidates] = useState([]);
   const [userVote, setUserVote] = useState({}); // User's ranking
 
@@ -56,16 +57,24 @@ function PollOpen({voteId: propVoteId}) {
         rank: userVote[candidateId],
       }));
 
-      console.log('rank', rank)
+      console.log('rank', rank);
 
-      await createPreference({
+      const response = await createPreference({
         accessToken: state.accessToken,
         voteId,
         rank,
-        // candidateId: rank.candidateId,
       });
 
-      console.log("User rank submitted:", rank);
+      if (response.message) {
+        setMessage(response.message);
+      } else {
+        const updatedCandidates = await fetchCandidates({
+          accessToken: state.accessToken,
+          voteId,
+        });
+        console.log("User rank submitted:", rank);
+        dispatch({ type: 'UPDATE_VOTE', vote: { id: voteId, candidates: updatedCandidates } });
+      }
     } catch (error) {
       setError(error.response ? error.response.data : error.message);
     }
@@ -78,6 +87,7 @@ function PollOpen({voteId: propVoteId}) {
   return (
     <div>
       <h2>Rank the Candidates</h2>
+      {message && <div>{message}</div>}
       <form onSubmit={handleSubmit}>
         <table>
           <thead>
