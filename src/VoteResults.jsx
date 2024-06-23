@@ -11,6 +11,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 function VoteResults({ voteId: propVoteId }) {
   const { voteId: paramVoteId } = useParams();
   const voteId = propVoteId || paramVoteId;
+  const { state: voteState, dispatch: voteDispatch } = useContext(VoteContext);
   const { state } = useContext(AuthContext);
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -25,6 +26,7 @@ function VoteResults({ voteId: propVoteId }) {
           accessToken: state.accessToken,
           voteId,
         });
+        voteDispatch({ type:'SET_VOTES', resultsData})
         console.log("Fetched results:", resultsData);
         setResults(resultsData);
       } catch (error) {
@@ -36,7 +38,7 @@ function VoteResults({ voteId: propVoteId }) {
     };
 
     fetchResults();
-  }, [state.accessToken, voteId]);
+  }, [state.accessToken, voteId, voteDispatch]);
 
   useEffect(() => {
     if (results && results.vote_counts && results.vote_counts.length > 0) {
