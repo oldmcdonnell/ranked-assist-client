@@ -16,7 +16,7 @@ import ErrorPage from './ErrorPage'
 import Header from './Header'
 import Footer from './Footer'
 import Login from './Login'
-import { AuthContext, ProfileContext } from './context'
+import { AuthContext, ProfileContext, VoteContext } from './context'
 import CreateNewUser from './CreateNewUser'
 import { initialMainState, mainReducer } from './reducers/main-reducer';
 import CreateVote from './CreateVote'
@@ -123,12 +123,24 @@ const ProfileProvider = ({ children }) => {
 };
 
 
+const VoteProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(mainReducer, initialMainState);
+
+  return (
+    <VoteContext.Provider value={{ state, dispatch }}>
+      {children}
+    </VoteContext.Provider>
+  );
+};
+
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <AuthContextProvider>
     <ProfileProvider>
+      <VoteProvider>
       <RouterProvider router={router} />
+      </VoteProvider>
     </ProfileProvider>
   </AuthContextProvider>
 );

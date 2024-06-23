@@ -1,9 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { fetchVoteResults } from "./api";
-import { AuthContext } from "./context";
+import { AuthContext, VoteContext } from "./context";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend } from "chart.js";
+import { Container } from "react-bootstrap";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
@@ -68,6 +69,7 @@ function VoteResults({ voteId: propVoteId }) {
   };
 
   return (
+    <Container mx-auto p-3>
     <div>
       <h2>Vote Results</h2>
       <Bar data={data} />
@@ -84,6 +86,7 @@ function VoteResults({ voteId: propVoteId }) {
         </div>
       )}
     </div>
+    </Container>
   );
 }
 

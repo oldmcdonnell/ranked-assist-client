@@ -107,6 +107,7 @@ export const mainReducer = (state, action) => {
         count: [],
         candidates: [],
         results: {}, // Reset results on logout
+        preferences: [],
       };
 
     default:

@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { fetchCandidates, createOrUpdateCandidate } from "./api";
 import { AuthContext } from "./context";
+import { Container } from "react-bootstrap";
 
 function OpenEnrollment({ voteId: propVoteId, onUpdate }) {
   const { voteId: paramVoteId } = useParams();
@@ -69,6 +70,7 @@ function OpenEnrollment({ voteId: propVoteId, onUpdate }) {
   }
 
   return (
+    <Container mx-auto p3 >
     <div>
       <h2>Open Enrollment</h2>
       <form onSubmit={handleSubmit}>
@@ -97,7 +99,11 @@ function OpenEnrollment({ voteId: propVoteId, onUpdate }) {
         </button>
         <button type="submit">Submit</button>
       </form>
+      <br></br>
+      <p></p>
+      <hr></hr>
     </div>
+    </Container>
   );
 }
 

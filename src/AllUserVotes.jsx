@@ -41,6 +41,7 @@ function AllUserVotes() {
   return groups && groups.votes ? (
     <>
       <div>
+        <h1>All User Polls</h1>
         {groups.votes.map(vote => (
           <div key={vote.id}>
             <OpenEnrollment voteId={vote.id} onUpdate={handleUpdate} />

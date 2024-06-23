@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { fetchCandidates, createPreference } from "./api";
 import { AuthContext } from "./context";
+import { Container } from "react-bootstrap";
 
 function PollOpen({ voteId: propVoteId, onUpdate }) {
   const { voteId: paramVoteId } = useParams();
@@ -73,9 +74,10 @@ function PollOpen({ voteId: propVoteId, onUpdate }) {
           voteId,
         });
         console.log("User rank submitted:", rank);
-        dispatch({ type: 'UPDATE_VOTE', vote: { id: voteId, candidates: updatedCandidates, rank: rank } });
+        dispatch({ type: 'UPDATE_VOTE', vote: { id: voteId, candidates: updatedCandidates } });
         onUpdate(); // Notify the parent component about the update
       }
+      dispatch({ type: 'SET_CANDIDATES', preferences: rank })
 
       // Clear the fields after the user has voted
       setUserVote({});
@@ -89,6 +91,7 @@ function PollOpen({ voteId: propVoteId, onUpdate }) {
   }
 
   return (
+    <Container mx-auto p-3>
     <div>
       <h2>Rank the Candidates</h2>
       {message && <div>{message}</div>}
@@ -120,6 +123,7 @@ function PollOpen({ voteId: propVoteId, onUpdate }) {
         <button type="submit">Submit</button>
       </form>
     </div>
+  </Container>
   );
 }
 

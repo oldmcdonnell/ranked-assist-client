@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { getAllProfiles, createFriendGroup } from './api';
 import { ProfileContext, AuthContext } from './context';
 import { useNavigate } from 'react-router-dom';
+import { Container, Row } from 'react-bootstrap';
+
 
 export default function CreateFriendGroupForm() {
   const { state: profileState, dispatch: profileDispatch } = useContext(ProfileContext);
@@ -54,6 +56,9 @@ export default function CreateFriendGroupForm() {
   };
 
   return (
+    
+    <Container mx-auto p-3>
+      
     <div>
       <h2>Create Polling Group</h2>
       <form onSubmit={handleSubmit}>
@@ -64,11 +69,11 @@ export default function CreateFriendGroupForm() {
           onChange={(e) => setGroupName(e.target.value)}
           required
         />
-        <textarea
+        {/* <textarea
           placeholder="Note"
           value={note}
           onChange={(e) => setNote(e.target.value)}
-        />
+        /> */}
         <input
           type="text"
           placeholder="Search profiles"
@@ -98,5 +103,6 @@ export default function CreateFriendGroupForm() {
         <button type="submit">Create Group</button>
       </form>
     </div>
+    </Container>
   );
 }
