@@ -26,6 +26,7 @@ function AllUserVotes() {
   }, [state.accessToken, dispatch]);
 
   const handleUpdate = () => {
+    console.log('HANDLE UPDATE CALLED ***')
     fetchGroups();
   };
 

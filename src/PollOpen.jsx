@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { fetchCandidates, createPreference } from "./api";
 import { AuthContext } from "./context";
 
-function PollOpen({ voteId: propVoteId }) {
+function PollOpen({ voteId: propVoteId, onUpdate }) {
   const { voteId: paramVoteId } = useParams();
   const voteId = propVoteId || paramVoteId;
   const { state, dispatch } = useContext(AuthContext);
@@ -65,7 +65,7 @@ function PollOpen({ voteId: propVoteId }) {
         rank,
       });
 
-      if (response.message) {
+      if (response.message) { 
         setMessage(response.message);
       } else {
         const updatedCandidates = await fetchCandidates({
@@ -73,8 +73,12 @@ function PollOpen({ voteId: propVoteId }) {
           voteId,
         });
         console.log("User rank submitted:", rank);
-        dispatch({ type: 'UPDATE_VOTE', vote: { id: voteId, candidates: updatedCandidates } });
+        dispatch({ type: 'UPDATE_VOTE', vote: { id: voteId, candidates: updatedCandidates, rank: rank } });
+        onUpdate(); // Notify the parent component about the update
       }
+
+      // Clear the fields after the user has voted
+      setUserVote({});
     } catch (error) {
       setError(error.response ? error.response.data : error.message);
     }
