@@ -1,13 +1,14 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { fetchCandidates, createPreference } from "./api";
-import { AuthContext } from "./context";
+import { fetchCandidates, createPreference, fetchVoteResults } from "./api"; // Ensure to import fetchVoteResults here
+import { AuthContext, VoteContext } from "./context"; // Ensure to import VoteContext
 import { Container } from "react-bootstrap";
 
-function PollOpen({ voteId: propVoteId, onUpdate }) {
+function PollOpen({ voteId: propVoteId }) {
   const { voteId: paramVoteId } = useParams();
   const voteId = propVoteId || paramVoteId;
   const { state, dispatch } = useContext(AuthContext);
+  const { dispatch: voteDispatch } = useContext(VoteContext); // Use VoteContext dispatch
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
   const [candidates, setCandidates] = useState([]);
@@ -73,11 +74,14 @@ function PollOpen({ voteId: propVoteId, onUpdate }) {
           accessToken: state.accessToken,
           voteId,
         });
+        const updatedResults = await fetchVoteResults({
+          accessToken: state.accessToken,
+          voteId,
+        });
         console.log("User rank submitted:", rank);
         dispatch({ type: 'UPDATE_VOTE', vote: { id: voteId, candidates: updatedCandidates } });
-        onUpdate(); // Notify the parent component about the update
+        voteDispatch({ type: 'SET_RESULTS', voteId, results: updatedResults });
       }
-      dispatch({ type: 'SET_CANDIDATES', preferences: rank })
 
       // Clear the fields after the user has voted
       setUserVote({});
@@ -92,38 +96,38 @@ function PollOpen({ voteId: propVoteId, onUpdate }) {
 
   return (
     <Container>
-    <div>
-      <h2>Rank the Candidates</h2>
-      {message && <div>{message}</div>}
-      <form onSubmit={handleSubmit}>
-        <table>
-          <thead>
-            <tr>
-              <th>Candidate</th>
-              <th>Rank</th>
-            </tr>
-          </thead>
-          <tbody>
-            {candidates.map((candidate) => (
-              <tr key={candidate.id}>
-                <td>{candidate.description}</td>
-                <td>
-                  <input
-                    type="number"
-                    min="1"
-                    max={candidates.length}
-                    value={userVote[candidate.id] || ""}
-                    onChange={(e) => handleVoteChange(candidate.id, e.target.value ? parseInt(e.target.value, 10) : "")}
-                  />
-                </td>
+      <div>
+        <h2>Rank the Candidates</h2>
+        {message && <div>{message}</div>}
+        <form onSubmit={handleSubmit}>
+          <table>
+            <thead>
+              <tr>
+                <th>Candidate</th>
+                <th>Rank</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        <button type="submit">Submit</button>
-      </form>
-    </div>
-  </Container>
+            </thead>
+            <tbody>
+              {candidates.map((candidate) => (
+                <tr key={candidate.id}>
+                  <td>{candidate.description}</td>
+                  <td>
+                    <input
+                      type="number"
+                      min="1"
+                      max={candidates.length}
+                      value={userVote[candidate.id] || ""}
+                      onChange={(e) => handleVoteChange(candidate.id, e.target.value ? parseInt(e.target.value, 10) : "")}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+    </Container>
   );
 }
 

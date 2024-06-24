@@ -13,7 +13,6 @@ function VoteResults({ voteId: propVoteId }) {
   const voteId = propVoteId || paramVoteId;
   const { state: voteState, dispatch: voteDispatch } = useContext(VoteContext);
   const { state } = useContext(AuthContext);
-  const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [rounds, setRounds] = useState([]);
@@ -26,9 +25,8 @@ function VoteResults({ voteId: propVoteId }) {
           accessToken: state.accessToken,
           voteId,
         });
-        voteDispatch({ type:'SET_VOTES', resultsData})
+        voteDispatch({ type: 'SET_RESULTS', voteId, results: resultsData });
         console.log("Fetched results:", resultsData);
-        setResults(resultsData);
       } catch (error) {
         console.log('BLAMMO: ERROR: ', error);
         setError(error.response ? error.response.data.error : error.message);
@@ -41,11 +39,17 @@ function VoteResults({ voteId: propVoteId }) {
   }, [state.accessToken, voteId, voteDispatch]);
 
   useEffect(() => {
-    if (results && results.vote_counts && results.vote_counts.length > 0) {
-      setRounds(results.vote_counts);
-      setLabels(Object.keys(results.vote_counts[0]));
+    const resultFromState = voteState.results[voteId];
+    console.log("Results from context for vote ID", voteId, ":", resultFromState);
+
+    if (resultFromState && resultFromState.vote_counts && resultFromState.vote_counts.length > 0) {
+      setRounds(resultFromState.vote_counts);
+      setLabels(Object.keys(resultFromState.vote_counts[0]));
+    } else {
+      setRounds([]);
+      setLabels([]);
     }
-  }, [results]);
+  }, [voteState.results, voteId]);
 
   if (loading) {
     return <div>Loading…</div>;
@@ -55,7 +59,9 @@ function VoteResults({ voteId: propVoteId }) {
     return <div>Error: {error}</div>;
   }
 
-  if (!results || rounds.length === 0) {
+  const resultFromState = voteState.results[voteId];
+
+  if (!resultFromState || rounds.length === 0) {
     return <div>No results available.</div>;
   }
 
@@ -66,16 +72,20 @@ function VoteResults({ voteId: propVoteId }) {
   }));
 
   const data = {
-    labels,
-    datasets,
+    labels: labels.length > 0 ? labels : ['No data'],
+    datasets: datasets.length > 0 ? datasets : [{
+      label: 'No data',
+      data: [0],
+      backgroundColor: 'rgba(192, 192, 192, 0.6)',
+    }],
   };
-  
+
   const options = {
     responsive: true,
     plugins: {
       title: {
         display: true,
-        text: results.title || 'Vote Results',
+        text: resultFromState ? resultFromState.title : 'Vote Results',
       },
       tooltip: {
         callbacks: {
@@ -92,54 +102,26 @@ function VoteResults({ voteId: propVoteId }) {
         }
       }
     },
-    onHover: (event, chartElement) => {
-      const canvas = event.chart.canvas;
-      canvas.style.cursor = chartElement.length ? 'pointer' : 'default';
-
-      if (chartElement.length) {
-        const index = chartElement[0].index;
-        const label = labels[index];
-
-        event.chart.config.data.datasets.forEach((dataset) => {
-          dataset.data[index] = {
-            ...dataset.data[index],
-            font: { weight: 'bold', size: 16 },
-          };
-        });
-
-        event.chart.update();
-      }
-    }
   };
+
   return (
     <Container>
-    <div>
-      <h2>Poll Results</h2>
-      <Bar
-          data={data}
-          options={{
-            responsive: true,
-            plugins: {
-              title: {
-                display: true,
-                text: results.title || 'Poll Results',
-              }
-            }
-          }}
-        />
-      {results.winner ? (
-        <div>
-          <h3>Winner: {results.winner}</h3>
-          <p>Winning Round: {results.round}</p>
-          <p>Total Votes: {results.final_votes[results.winner]}</p>
-        </div>
-      ) : (
-        <div>
-          <h3>Tie</h3>
-          <p>Number of Rounds: {results.round}</p>
-        </div>
-      )}
-    </div>
+      <div>
+        <h2>Poll Results</h2>
+        <Bar data={data} options={options} />
+        {resultFromState && resultFromState.winner ? (
+          <div>
+            <h3>Winner: {resultFromState.winner}</h3>
+            <p>Winning Round: {resultFromState.round}</p>
+            <p>Total Votes: {resultFromState.final_votes[resultFromState.winner]}</p>
+          </div>
+        ) : (
+          <div>
+            <h3>Tie</h3>
+            <p>Number of Rounds: {resultFromState ? resultFromState.round : 'N/A'}</p>
+          </div>
+        )}
+      </div>
     </Container>
   );
 }

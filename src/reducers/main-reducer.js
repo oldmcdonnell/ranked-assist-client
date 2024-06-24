@@ -8,7 +8,7 @@ export const initialMainState = JSONStorage ?? {
   users: [],
   profileImSeeing: [],
   groups: [],
-  votes: {},
+  votes: [], // Ensure this is an array
   voteId: '',
   count: [],
   candidates: [],
@@ -20,7 +20,7 @@ const saveStateToLocalStorage = (state) => {
   localStorage.setItem('STATE', JSON.stringify(state));
 };
 
-export const mainReducer = (state, action) => {
+export const mainReducer = (state = initialMainState, action) => {
   let newState;
 
   switch (action.type) {
@@ -69,27 +69,37 @@ export const mainReducer = (state, action) => {
       saveStateToLocalStorage(newState);
       return newState;
 
-      case 'UPDATE_VOTE':
-        // Find the index of the vote to be updated
-        const voteIndex = state.votes.findIndex(vote => vote.id === action.vote.id);
-        // Create a copy of the votes array with the updated vote
+    case 'UPDATE_VOTE':
+      const voteIndex = (state.votes || []).findIndex(vote => vote.id === action.vote.id);
+      if (voteIndex !== -1) {
         const updatedVotes = [...state.votes];
         updatedVotes[voteIndex] = { ...updatedVotes[voteIndex], ...action.vote };
         newState = { ...state, votes: updatedVotes };
-        saveStateToLocalStorage(newState);
-        return newState;
+      } else {
+        newState = { ...state, votes: [...state.votes, action.vote] };
+      }
+      saveStateToLocalStorage(newState);
+      return newState;
+
+    case 'SET_VOTES':
+      newState = { ...state, votes: action.resultsData || [] };
+      saveStateToLocalStorage(newState);
+      return newState;
 
     case 'SET_CANDIDATES':
       newState = { ...state, candidates: action.candidates };
       saveStateToLocalStorage(newState);
       return newState;
 
-    case 'SET_RESULTS':
-      newState = { ...state, votes: action.votes };
-      saveStateToLocalStorage(newState);
-      return newState;
+      case 'SET_RESULTS':
+        newState = { 
+          ...state, 
+          results: { ...state.results, [action.voteId]: action.results } 
+        };
+        saveStateToLocalStorage(newState);
+        return newState;
 
-    case 'SET_PREFERENCES': // Add this case
+    case 'SET_PREFERENCES':
       newState = { ...state, preferences: action.preferences };
       saveStateToLocalStorage(newState);
       return newState;
@@ -103,7 +113,7 @@ export const mainReducer = (state, action) => {
         friendGroups: [],
         users: [],
         groups: [],
-        votes: [],
+        votes: [], // Ensure this is reset as an array
         voteId: '',
         count: [],
         candidates: [],
