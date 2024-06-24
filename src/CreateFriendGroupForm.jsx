@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { getAllProfiles, createFriendGroup } from './api';
 import { ProfileContext, AuthContext } from './context';
 import { useNavigate } from 'react-router-dom';
-import { Container, Row } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 
 
 export default function CreateFriendGroupForm() {
@@ -17,8 +17,6 @@ export default function CreateFriendGroupForm() {
   useEffect(() => {
     const fetchProfiles = async () => {
       try {
-        // let profiles = await getAllProfiles({ accessToken: authState.accessToken, dispatch: profileDispatch });
-        // setProfiles(profiles);
         const profiles = await getAllProfiles({ accessToken: authState.accessToken, dispatch: profileDispatch });
         profileDispatch({ type: 'SET_PROFILES', profiles });
       } catch (error) {
@@ -56,53 +54,51 @@ export default function CreateFriendGroupForm() {
   };
 
   return (
-    
-    <Container>
-      
-    <div>
-      <h2>Create Polling Group</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Group Name"
-          value={groupName}
-          onChange={(e) => setGroupName(e.target.value)}
-          required
-        />
-        <textarea
-          placeholder="Note"
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Search profiles"
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-        />
-        <div>
-          {filter && filteredProfiles.slice(0, 5).map((profile, index) => (
-            <div
-              key={index}
-              onClick={() => handleProfileClick(profile)}
-            >
-              @{profile.user.username} - {profile.user.first_name} {profile.user.last_name} ({profile.user.email})
-            </div>
-          ))}
-        </div>
-        <div>
-          <h3>Selected Users:</h3>
-          <ul>
-            {selectedProfiles.map(profile => (
-              <li key={profile.id}>
-                {profile.user.username}
-              </li>
+    <Container className="form-container">
+      <div>
+        <h2>Create Polling Group</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Group Name"
+            value={groupName}
+            onChange={(e) => setGroupName(e.target.value)}
+            required
+          />
+          <textarea
+            placeholder="Note"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Search profiles"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+          />
+          <div>
+            {filter && filteredProfiles.slice(0, 5).map((profile, index) => (
+              <div
+                key={index}
+                onClick={() => handleProfileClick(profile)}
+              >
+                @{profile.user.username} - {profile.user.first_name} {profile.user.last_name} ({profile.user.email})
+              </div>
             ))}
-          </ul>
-        </div>
-        <button type="submit">Create Group</button>
-      </form>
-    </div>
+          </div>
+          <div>
+            <h3>Selected Users:</h3>
+            <ul>
+              {selectedProfiles.map(profile => (
+                <li key={profile.id}>
+                  {profile.user.username}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <button type="submit">Create Group</button>
+        </form>
+      </div>
     </Container>
   );
 }

@@ -95,6 +95,13 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
   outline: none;
 }
 
+/* Container */
+.form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
 /* Links */
 a {
   color: #0b0728;
