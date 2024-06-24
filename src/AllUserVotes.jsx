@@ -4,6 +4,7 @@ import { getAllUserGroup } from "./api";
 import OpenEnrollment from "./OpenEnrollment";
 import PollOpen from "./PollOpen";
 import VoteResults from "./VoteResults";
+import { Container } from "react-bootstrap";
 
 function AllUserVotes() {
   const { state, dispatch } = useContext(AuthContext);
@@ -40,16 +41,19 @@ function AllUserVotes() {
 
   return groups && groups.votes ? (
     <>
+    <Container>
       <div>
         <h1>All User Polls</h1>
         {groups.votes.map(vote => (
           <div key={vote.id}>
+            <h3>{vote.title}</h3>
             <OpenEnrollment voteId={vote.id} onUpdate={handleUpdate} />
             <PollOpen voteId={vote.id} onUpdate={handleUpdate} />
             <VoteResults voteId={vote.id} />
           </div>
         ))}
       </div>
+      </Container>
     </>
   ) : null;
 }
