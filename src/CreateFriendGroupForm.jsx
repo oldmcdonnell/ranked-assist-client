@@ -57,7 +57,7 @@ export default function CreateFriendGroupForm() {
 
   return (
     
-    <Container mx-auto p-3>
+    <Container>
       
     <div>
       <h2>Create Polling Group</h2>
@@ -69,11 +69,11 @@ export default function CreateFriendGroupForm() {
           onChange={(e) => setGroupName(e.target.value)}
           required
         />
-        {/* <textarea
+        <textarea
           placeholder="Note"
           value={note}
           onChange={(e) => setNote(e.target.value)}
-        /> */}
+        />
         <input
           type="text"
           placeholder="Search profiles"
