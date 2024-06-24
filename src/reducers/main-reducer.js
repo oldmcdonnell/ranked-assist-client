@@ -69,14 +69,15 @@ export const mainReducer = (state, action) => {
       saveStateToLocalStorage(newState);
       return newState;
 
-    case 'UPDATE_VOTE':
-      newState = {
-        ...state,
-        votes: state.votes.map(vote => vote.id === action.vote.id ? action.vote : vote),
-        candidates: action.candidates,
-      };
-      saveStateToLocalStorage(newState);
-      return newState;
+      case 'UPDATE_VOTE':
+        // Find the index of the vote to be updated
+        const voteIndex = state.votes.findIndex(vote => vote.id === action.vote.id);
+        // Create a copy of the votes array with the updated vote
+        const updatedVotes = [...state.votes];
+        updatedVotes[voteIndex] = { ...updatedVotes[voteIndex], ...action.vote };
+        newState = { ...state, votes: updatedVotes };
+        saveStateToLocalStorage(newState);
+        return newState;
 
     case 'SET_CANDIDATES':
       newState = { ...state, candidates: action.candidates };
