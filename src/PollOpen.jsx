@@ -91,7 +91,7 @@ function PollOpen({ voteId: propVoteId, onUpdate }) {
   }
 
   return (
-    <Container mx-auto p-3>
+    <Container>
     <div>
       <h2>Rank the Candidates</h2>
       {message && <div>{message}</div>}
