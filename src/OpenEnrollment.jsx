@@ -70,7 +70,7 @@ function OpenEnrollment({ voteId: propVoteId, onUpdate }) {
   }
 
   return (
-    <Container mx-auto p3 >
+    <Container>
     <div>
       <h2>Open Enrollment</h2>
       <form onSubmit={handleSubmit}>

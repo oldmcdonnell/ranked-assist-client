@@ -3,6 +3,7 @@ import { AuthContext } from "./context";
 import { getMyVotes, closeEnrollment, togglePolls, deleteVote } from "./api";
 import MyFriendGroups from "./MyFriendGroups";
 import { Link } from "react-router-dom";
+import { Container } from "react-bootstrap";
 
 function MyProfile() {
   const { state } = useContext(AuthContext);
@@ -56,10 +57,11 @@ function MyProfile() {
 
   return (
     <>
+      <Container>
       <MyFriendGroups />
       <Link className="text-black-50 px-3 navBar" to="/CreateVote">Create a New vote</Link>
       <div>
-        <h2>My Votes</h2>
+        <h2>My Authored Votes</h2>
         <button onClick={toggleOptions}>
           {optionsVisible ? '▲ Hide Options' : '▼ Show Options'}
         </button>
@@ -88,6 +90,7 @@ function MyProfile() {
           </div>
         )}
       </div>
+      </Container>
     </>
   );
 }

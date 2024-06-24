@@ -112,7 +112,7 @@ function VoteResults({ voteId: propVoteId }) {
     }
   };
   return (
-    <Container mx-auto p-3>
+    <Container>
     <div>
       <h2>Poll Results</h2>
       <Bar
