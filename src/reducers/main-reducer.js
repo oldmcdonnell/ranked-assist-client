@@ -8,7 +8,7 @@ export const initialMainState = JSONStorage ?? {
   users: [],
   profileImSeeing: [],
   groups: [],
-  votes: [],
+  votes: {},
   voteId: '',
   count: [],
   candidates: [],
@@ -84,7 +84,7 @@ export const mainReducer = (state, action) => {
       return newState;
 
     case 'SET_RESULTS':
-      newState = { ...state, results: action.results };
+      newState = { ...state, votes: action.votes };
       saveStateToLocalStorage(newState);
       return newState;
 

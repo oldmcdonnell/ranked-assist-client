@@ -69,12 +69,64 @@ function VoteResults({ voteId: propVoteId }) {
     labels,
     datasets,
   };
+  
+  const options = {
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: results.title || 'Vote Results',
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            let label = context.dataset.label || '';
+            if (label) {
+              label += ': ';
+            }
+            if (context.parsed.y !== null) {
+              label += context.parsed.y;
+            }
+            return label;
+          }
+        }
+      }
+    },
+    onHover: (event, chartElement) => {
+      const canvas = event.chart.canvas;
+      canvas.style.cursor = chartElement.length ? 'pointer' : 'default';
 
+      if (chartElement.length) {
+        const index = chartElement[0].index;
+        const label = labels[index];
+
+        event.chart.config.data.datasets.forEach((dataset) => {
+          dataset.data[index] = {
+            ...dataset.data[index],
+            font: { weight: 'bold', size: 16 },
+          };
+        });
+
+        event.chart.update();
+      }
+    }
+  };
   return (
     <Container mx-auto p-3>
     <div>
-      <h2>Vote Results</h2>
-      <Bar data={data} />
+      <h2>Poll Results</h2>
+      <Bar
+          data={data}
+          options={{
+            responsive: true,
+            plugins: {
+              title: {
+                display: true,
+                text: results.title || 'Poll Results',
+              }
+            }
+          }}
+        />
       {results.winner ? (
         <div>
           <h3>Winner: {results.winner}</h3>
