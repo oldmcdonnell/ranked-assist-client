@@ -102,7 +102,7 @@ function CreateVote() {
               </Form.Group>
             ))}
             <Button variant="secondary" onClick={handleAddCandidate}>Add Candidate</Button>
-            <Button variant="primary" type="submit" style={{ marginLeft: '10px' }}>Submit</Button>
+            <Button variant="primary" disabled={candidates.length==0} type="submit" style={{ marginLeft: '10px' }}>Submit</Button>
           </Form>
         </Col>
       </Row>
