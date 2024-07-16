@@ -29,6 +29,7 @@ function CreateNewUser() {
         setError(response.error || 'Failed to create user.');
       }
     } catch (error) {
+      console.log('failed to create')
       setError('An error occurred.');
     }
   };

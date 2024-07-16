@@ -69,7 +69,7 @@ export const createUser = async ({ username, password, firstName, lastName, emai
     console.log('CREATE USER: ', response);
     return { success: true, data: response.data };
   } catch (error) {
-    console.log('ERROR: ', error);
+    console.log('Create user ERROR: ', error);
     return { success: false, error };
   }
 };
