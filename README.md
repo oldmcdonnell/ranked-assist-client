@@ -7,3 +7,5 @@ The idea is protected groups can vote on whatever for whenever or subject a vote
 The author of a poll can end the enrollment period or the polling period after which only the results will remain.
 
 There is further hope I can allow the author of a poll to create a time limit for the polls, or even create the same poll with the same time like an alarm clock. 
+
+This project has a react frontend and a django/sqlite  backend. 

@@ -299,6 +299,26 @@ export const createCandidate = async ({ accessToken, voteId, description }) => {
   }
 };
 
+
+export const deleteCandidate = async ({ accessToken, candidateId }) => {
+  console.log('delete candidate ID ', candidateId, accessToken);
+  try {
+    const response = await axios({
+      method: 'DELETE',
+      url: `${baseUrl}/delete_candidate/${candidateId}/`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    console.log('candidates: ', response);
+    return response.data;
+  } catch (error) {
+    console.log('delete candidate error: ', error);
+    throw error;
+  }
+};
+
+
 export const createOrUpdateCandidate = async ({ accessToken, voteId, candidateId, description }) => {
   console.log('create/update candidate vote ID ', voteId, accessToken, candidateId);
   try {
