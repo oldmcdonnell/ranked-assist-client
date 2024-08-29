@@ -98,6 +98,11 @@ function PollOpen({ voteId: propVoteId }) {
     <Container>
       <div>
         <h2>Rank the Candidates</h2>
+        {candidates.length > 0 && (
+        <p>
+          Below are the preferences for this poll, rank them {candidates.length > 1 ? `1-${candidates.length}` : '1'}.
+        </p>
+      )}
         {message && <div>{message}</div>}
         <form onSubmit={handleSubmit}>
           <table>
