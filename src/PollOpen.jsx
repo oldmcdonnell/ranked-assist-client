@@ -100,7 +100,7 @@ function PollOpen({ voteId: propVoteId }) {
         <h2>Rank the Candidates</h2>
         {candidates.length > 0 && (
         <p>
-          Below are the preferences for this poll, rank them {candidates.length > 1 ? `1-${candidates.length}` : '1'}.
+          Below are the preferences for this poll, rank them 1 to {candidates.length}.
         </p>
       )}
         {message && <div>{message}</div>}
