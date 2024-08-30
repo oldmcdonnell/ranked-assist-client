@@ -104,6 +104,14 @@ export const mainReducer = (state = initialMainState, action) => {
       saveStateToLocalStorage(newState);
       return newState;
 
+    case 'REMOVE_CANDIDATE':
+      newState = {
+      ...state,
+        candidates: state.candidates.filter(candidate => candidate.id !== action.candidateId),
+      };
+      saveStateToLocalStorage(newState);
+      return newState;  
+
     case 'LOGOUT':
       localStorage.removeItem('STATE');
       return {
